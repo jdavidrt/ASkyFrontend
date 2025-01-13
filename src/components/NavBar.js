@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import logo from "../assets/ASKYLogo.png";
+import	"../Styles/NavBar.css";
 
 import {
   Collapse,
@@ -41,43 +43,59 @@ const NavBar = () => {
     <div className="nav-container">
       <Navbar color="light" light expand="md" container={false}>
         <Container>
-          <NavbarBrand className="logo" />
+          <NavbarBrand >
+            <img src={logo} alt="ASKY Logo" width="50" />
+          </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              <NavItem>
+              <NavItem color="light">
                 <NavLink
                   tag={RouterNavLink}
                   to="/"
                   exact
                   activeClassName="router-link-exact-active"
+                  className="nav-link-custom"
                 >
-                  Home
+                  Inicio
                 </NavLink>
               </NavItem>
-              {isAuthenticated && (
-                <NavItem>
-                  <NavLink
-                    tag={RouterNavLink}
-                    to="/external-api"
-                    exact
-                    activeClassName="router-link-exact-active"
-                  >
-                    External API
-                  </NavLink>
-                </NavItem>
-              )}
+              {isAuthenticated ? (
+                <>
+                  <NavItem >
+                    <NavLink
+                      tag={RouterNavLink}
+                      to="/preguntas"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                    >
+                      Preguntas
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      tag={RouterNavLink}
+                      to="/askoins"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                    >
+                      ASKoins
+                    </NavLink>
+                  </NavItem>
+                </>
+              ) : null}
             </Nav>
             <Nav className="d-none d-md-block" navbar>
               {!isAuthenticated && (
                 <NavItem>
                   <Button
                     id="qsLoginBtn"
-                    color="primary"
-                    className="btn-margin"
+                    style={{ backgroundColor: '#0891B2', borderColor: '#0891B2', color: 'white' }}
                     onClick={() => loginWithRedirect()}
                   >
-                    Log in
+                    Iniciar Sesión
                   </Button>
                 </NavItem>
               )}
@@ -99,14 +117,13 @@ const NavBar = () => {
                       className="dropdown-profile"
                       activeClassName="router-link-exact-active"
                     >
-                      <FontAwesomeIcon icon="user" className="mr-3" /> Profile
+                      <FontAwesomeIcon icon="user" className="mr-3" /> Perfil
                     </DropdownItem>
                     <DropdownItem
                       id="qsLogoutBtn"
                       onClick={() => logoutWithRedirect()}
                     >
-                      <FontAwesomeIcon icon="power-off" className="mr-3" /> Log
-                      out
+                      <FontAwesomeIcon icon="power-off" className="mr-3" /> Cerrar Sesión
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
@@ -117,11 +134,11 @@ const NavBar = () => {
                 <NavItem>
                   <Button
                     id="qsLoginBtn"
-                    color="primary"
+                    color="Info"
                     block
                     onClick={() => loginWithRedirect({})}
                   >
-                    Log in
+                    Iniciar Sesión
                   </Button>
                 </NavItem>
               </Nav>
@@ -149,7 +166,7 @@ const NavBar = () => {
                     to="/profile"
                     activeClassName="router-link-exact-active"
                   >
-                    Profile
+                    Perfil
                   </RouterNavLink>
                 </NavItem>
                 <NavItem>
@@ -159,7 +176,7 @@ const NavBar = () => {
                     id="qsLogoutBtn"
                     onClick={() => logoutWithRedirect()}
                   >
-                    Log out
+                    Cerrar Sesión
                   </RouterNavLink>
                 </NavItem>
               </Nav>

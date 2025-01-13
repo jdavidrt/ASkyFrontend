@@ -1,0 +1,4 @@
+
+  .navbar .nav-link-custom.router-link-exact-active {
+    border-bottom: 3px solid #0891B2 !important; /* Código hexadecimal para cian */
+  }
