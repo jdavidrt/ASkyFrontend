@@ -30,6 +30,7 @@
     "framer-motion": "^11.17.0",
     "helmet": "^4.4",
     "highlight.js": "^10.0",
+    "lucide-react": "^0.471.1",
     "morgan": "^1.9",
     "npm-run-all": "^4.1",
     "postcss": "^8.4",
