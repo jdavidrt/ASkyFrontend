@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../assets/ASKYLogo.png";
-import	"../Styles/NavBar.css";
+import "../Styles/NavBar.css";
 
 import {
   Collapse,
@@ -34,22 +34,22 @@ const NavBar = () => {
 
   const logoutWithRedirect = () =>
     logout({
-        logoutParams: {
-          returnTo: window.location.origin,
-        }
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
     });
 
   return (
     <div className="nav-container">
       <Navbar color="light" light expand="md" container={false}>
         <Container>
-          <NavbarBrand >
+          <NavbarBrand>
             <img src={logo} alt="ASKY Logo" width="50" />
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              <NavItem color="light">
+              <NavItem>
                 <NavLink
                   tag={RouterNavLink}
                   to="/"
@@ -60,9 +60,22 @@ const NavBar = () => {
                   Inicio
                 </NavLink>
               </NavItem>
-              {isAuthenticated ? (
+              {!isAuthenticated && (
+                <NavItem>
+                  <NavLink
+                    tag={RouterNavLink}
+                    to="/sobre-nosotros"
+                    exact
+                    activeClassName="router-link-exact-active"
+                    className="nav-link-custom"
+                  >
+                    Sobre Nosotros
+                  </NavLink>
+                </NavItem>
+              )}
+              {isAuthenticated && (
                 <>
-                  <NavItem >
+                  <NavItem>
                     <NavLink
                       tag={RouterNavLink}
                       to="/preguntas"
@@ -85,14 +98,14 @@ const NavBar = () => {
                     </NavLink>
                   </NavItem>
                 </>
-              ) : null}
+              )}
             </Nav>
             <Nav className="d-none d-md-block" navbar>
               {!isAuthenticated && (
                 <NavItem>
                   <Button
                     id="qsLoginBtn"
-                    style={{ backgroundColor: '#0891B2', borderColor: '#0891B2', color: 'white' }}
+                    style={{ backgroundColor: "#0891B2", borderColor: "#0891B2", color: "white" }}
                     onClick={() => loginWithRedirect()}
                   >
                     Iniciar Sesión
@@ -136,7 +149,7 @@ const NavBar = () => {
                     id="qsLoginBtn"
                     color="Info"
                     block
-                    onClick={() => loginWithRedirect({})}
+                    onClick={() => loginWithRedirect()}
                   >
                     Iniciar Sesión
                   </Button>

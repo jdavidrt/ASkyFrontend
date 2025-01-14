@@ -1,0 +1,126 @@
+/* Sección general */
+.about-us-section {
+    background-color: #f9f9f9;
+    padding: 60px 20px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: #333;
+  }
+  
+  /* Introducción */
+  .about-logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .about-logo {
+    width: 120px;
+    height: auto;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #005f73;
+  }
+  
+  .about-us-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+  
+  /* Misión y Visión */
+  .mission-vision {
+    margin-top: 20px;
+  }
+  
+  .mission-title,
+  .vision-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #005f73;
+  }
+  
+  .mission-text,
+  .vision-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+  
+  /* Valores */
+  .values-section {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .values-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #005f73;
+  }
+  
+  .value-item {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .value-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .value-card h4 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #0891b2;
+  }
+  
+  .value-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  /* Propuesta de Valor */
+  .value-proposition-section {
+    margin-top: 40px;
+  }
+  
+  .value-proposition h2 {
+    font-size: 2rem;
+    color: #005f73;
+    margin-bottom: 20px;
+  }
+  
+  .value-proposition p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .section-title,
+    .values-title {
+      font-size: 1.8rem;
+    }
+  
+    .value-card h4 {
+      font-size: 1.2rem;
+    }
+  
+    .value-card p {
+      font-size: 0.95rem;
+    }
+  }
+  
