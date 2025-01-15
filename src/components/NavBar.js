@@ -73,7 +73,7 @@ const NavBar = () => {
                   </NavLink>
                 </NavItem>
               )}
-              {isAuthenticated && (
+              {false && (
                 <>
                   <NavItem>
                     <NavLink
@@ -86,7 +86,7 @@ const NavBar = () => {
                       Preguntas
                     </NavLink>
                   </NavItem>
-                  <NavItem>
+                  {true ? "" : <NavItem>
                     <NavLink
                       tag={RouterNavLink}
                       to="/askoins"
@@ -96,7 +96,7 @@ const NavBar = () => {
                     >
                       ASKoins
                     </NavLink>
-                  </NavItem>
+                  </NavItem>}
                 </>
               )}
             </Nav>
