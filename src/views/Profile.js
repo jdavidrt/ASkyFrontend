@@ -30,13 +30,14 @@ export const ProfileComponent = () => {
     console.log("Datos del formulario:", formData);
     // Aquí puedes enviar formData a tu backend.
   };
-  
+
 
   const expertOptions = [
     { value: "no", label: "No" },
     { value: "yes", label: "Sí" },
   ];
 
+  console.log(user)
   const subjectOptions = [
     { value: "matematicas", label: "Matemáticas" },
     { value: "fisica", label: "Física" },
@@ -55,13 +56,13 @@ export const ProfileComponent = () => {
           />
         </Col>
         <Col md>
-          <h2>{user.name}</h2>
+          <h2>{user.nickname}</h2>
           <p className="lead text-muted">{user.email}</p>
         </Col>
       </Row>
       <Row>
         <Col md={12}>
-          <Form className="profile-form"  onSubmit={handleSubmit}>
+          <Form className="profile-form" onSubmit={handleSubmit}>
             <h3 className="form-title">Editar Perfil</h3>
 
             <FormGroup>
@@ -73,6 +74,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu nombre"
+                value={user.given_name}
               />
             </FormGroup>
 
@@ -85,6 +87,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu apellido"
+                value={user.family_name}
               />
             </FormGroup>
 
