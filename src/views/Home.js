@@ -6,10 +6,11 @@ import LandingPage from "../components/LandingPage";
 
 const Home = () => {
   const { isAuthenticated } = useAuth0();
+  console.log("User Auth:", isAuthenticated)
 
   return (
     <Fragment>
-      {isAuthenticated ? <Hero /> : <LandingPage />}
+      <LandingPage />
     </Fragment>
   );
 };

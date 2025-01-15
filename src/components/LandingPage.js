@@ -9,6 +9,8 @@ import "../Styles/LandingPage.css";
 
 const LandingPage = () => {
   const { loginWithRedirect } = useAuth0();
+  const { isAuthenticated } = useAuth0();
+  console.log("User Auth:", isAuthenticated)
 
   return (
     <div className="landing-page">
@@ -27,14 +29,15 @@ const LandingPage = () => {
           <p className="subtitle">
             La plataforma que te conecta con expertos para obtener respuestas rápidas y confiables.
           </p>
-          <Button
+          {isAuthenticated ? "" : <Button
             color="primary"
             size="lg"
             className="cta-button"
             onClick={() => loginWithRedirect()}
           >
             Regístrate ahora
-          </Button>
+          </Button>}
+
         </Container>
       </motion.section>
 
@@ -44,8 +47,8 @@ const LandingPage = () => {
           <h2 className="text-center section-title">¿Qué ofrecemos?</h2>
           <Row>
             {[{ icon: faUser, title: "Conecta con expertos", description: "Encuentra a los mejores en su campo para resolver tus dudas." },
-              { icon: faCommentDots, title: "Consultas rápidas", description: "Haz preguntas y recibe respuestas en tiempo récord." },
-              { icon: faMoneyBill, title: "Transacciones seguras", description: "Usa ASKoins para pagar de manera fácil y transparente." }].map((feature, index) => (
+            { icon: faCommentDots, title: "Consultas rápidas", description: "Haz preguntas y recibe respuestas en tiempo récord." },
+            { icon: faMoneyBill, title: "Transacciones seguras", description: "Usa ASKoins para pagar de manera fácil y transparente." }].map((feature, index) => (
               <Col md="4" key={index}>
                 <motion.div className="feature-card" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <FontAwesomeIcon icon={feature.icon} size="3x" className="feature-icon" />
@@ -64,8 +67,8 @@ const LandingPage = () => {
           <h2 className="text-center section-title">Testimonios de nuestros usuarios</h2>
           <Row className="justify-content-center">
             {[{ quote: "ASKy me ayudó a resolver dudas rápidamente. ¡Increíble experiencia!", author: "Usuario Satisfecho" },
-              { quote: "Un lugar donde el conocimiento es recompensado. Totalmente recomendado.", author: "Experto Reconocido" },
-              { quote: "La plataforma es intuitiva y muy útil. Me encanta el sistema de ASKoins.", author: "Nuevo Usuario" }].map((item, index) => (
+            { quote: "Un lugar donde el conocimiento es recompensado. Totalmente recomendado.", author: "Experto Reconocido" },
+            { quote: "La plataforma es intuitiva y muy útil. Me encanta el sistema de ASKoins.", author: "Nuevo Usuario" }].map((item, index) => (
               <Col md="4" key={index}>
                 <motion.div className="testimonial-card" whileHover={{ scale: 1.05 }}>
                   <p className="testimonial-quote">"{item.quote}"</p>
@@ -87,8 +90,8 @@ const LandingPage = () => {
             <h3 className="steps-title">Si tienes preguntas</h3>
             <div className="steps-container">
               {[{ step: "Regístrate", desc: "Crea tu cuenta de manera rápida y segura." },
-                { step: "Encuentra expertos", desc: "Filtra y selecciona al experto adecuado para tu consulta." },
-                { step: "Recibe respuestas", desc: "Obtén soluciones claras y rápidas." }].map((item, index) => (
+              { step: "Encuentra expertos", desc: "Filtra y selecciona al experto adecuado para tu consulta." },
+              { step: "Recibe respuestas", desc: "Obtén soluciones claras y rápidas." }].map((item, index) => (
                 <motion.div key={index} className="step-card" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2 }}>
                   <div className="step-icon">
                     <span className="step-number">{index + 1}</span>
@@ -107,8 +110,8 @@ const LandingPage = () => {
             <h3 className="steps-title">Si eres experto</h3>
             <div className="steps-container">
               {[{ step: "Habilita tu perfil", desc: "Regístrate y activa la opción para responder consultas." },
-                { step: "Recibe preguntas", desc: "Acepta consultas de usuarios y comienza a responder." },
-                { step: "Gana ASKoins", desc: "Recibe recompensas según la calidad de tus respuestas." }].map((item, index) => (
+              { step: "Recibe preguntas", desc: "Acepta consultas de usuarios y comienza a responder." },
+              { step: "Gana ASKoins", desc: "Recibe recompensas según la calidad de tus respuestas." }].map((item, index) => (
                 <motion.div key={index} className="step-card" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2 }}>
                   <div className="step-icon">
                     <span className="step-number">{index + 1}</span>
