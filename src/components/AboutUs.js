@@ -74,8 +74,8 @@ const AboutUs = () => {
                   {value === "Transparencia"
                     ? "Fomentamos interacciones honestas y claras."
                     : value === "Colaboración"
-                    ? "Creemos en el intercambio de conocimientos."
-                    : "Hacemos el aprendizaje accesible para todos."}
+                      ? "Creemos en el intercambio de conocimientos."
+                      : "Hacemos el aprendizaje accesible para todos."}
                 </p>
               </motion.div>
             </Col>
@@ -98,6 +98,35 @@ const AboutUs = () => {
               </p>
             </motion.div>
           </Col>
+        </Row>
+
+        {/* Sección: Nuestro Talento */}
+        <Row className="talent-section text-center">
+          <Col md="12">
+            <h2 className="value-proposition-title">Nuestro Talento</h2>
+          </Col>
+          {[
+            { name: "Néstor", title: "Desarrollador Frontend", img: "Néstor.jpg" },
+            { name: "Juan David", title: "Desarrollador Frontend", img: "JuanDavid.jpg" },
+            { name: "Juan Sebastián", title: "Desarrollador Backend", img: "JuanSebastián.jpg" },
+            { name: "Andrés", title: "Desarrollador Backend", img: "Andrés.jpg" },
+          ].map((dev, index) => (
+            <Col md="3" sm="6" key={index} className="talent-card-container">
+              <motion.div
+                className="talent-card"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src={require(`../assets/${dev.img}`)}
+                  alt={`${dev.name}`}
+                  className="talent-img"
+                />
+                <h4 className="talent-name">{dev.name}</h4>
+                <p className="talent-title">{dev.title}</p>
+              </motion.div>
+            </Col>
+          ))}
         </Row>
       </Container>
     </section>
