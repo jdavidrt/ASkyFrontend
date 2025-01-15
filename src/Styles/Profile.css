@@ -1,0 +1,103 @@
+/* Perfil del usuario */
+.profile-container {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header {
+    margin-bottom: 30px;
+  }
+  
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #005f73;
+  }
+  
+  .profile-form label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .profile-form input,
+  .profile-form select {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+  }
+  
+  .submit-button {
+    background-color: #005f73;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #028090;
+  }
+
+/* Select customizado */
+.select-dropdown {
+    margin-top: 5px;
+  }
+  
+  .select-dropdown .css-1s2u09g-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    padding: 5px;
+    font-size: 1rem;
+  }
+  
+  .select-dropdown .css-1s2u09g-control:hover {
+    border-color: #005f73;
+  }
+  
+  .select-dropdown .css-1okebmr-indicatorSeparator {
+    display: none;
+  }
+  
+  .select-dropdown .css-319lph-ValueContainer {
+    padding: 5px 10px;
+  }
+  
+  .select-dropdown .css-1hb7zxy-IndicatorsContainer {
+    padding: 5px;
+  }
+  
+  .select-dropdown .css-12jo7m5-MultiValue {
+    background-color: #e0f7fa;
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-size: 0.9rem;
+    color: #005f73;
+  }
+  
+  .select-dropdown .css-12jo7m5-MultiValue__remove {
+    color: #005f73;
+  }
+  
+  .select-dropdown .css-12jo7m5-MultiValue__remove:hover {
+    background-color: #028090;
+    color: #fff;
+  }
+  
