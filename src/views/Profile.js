@@ -6,6 +6,7 @@ import Loading from "../components/Loading";
 import "../Styles/Profile.css";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export const ProfileComponent = () => {
   const { user } = useAuth0();
@@ -23,6 +24,9 @@ export const ProfileComponent = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [modal, setModal] = useState(false);
   const [profilePicture, setProfilePicture] = useState(user.picture);
+  const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const toggleTooltip = () => {
     setTooltipOpen(!tooltipOpen);
@@ -69,6 +73,14 @@ export const ProfileComponent = () => {
     }
   };
 
+  const handlePrivacyPolicyChange = (event) => {
+    setPrivacyPolicyAccepted(event.target.checked);
+  };
+
+  const handleTermsChange = (event) => {
+    setTermsAccepted(event.target.checked);
+  };
+
   const getRelatedTopicsOptions = () => {
     const topics = {
       matematicas: [
@@ -108,6 +120,10 @@ export const ProfileComponent = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!privacyPolicyAccepted || !termsAccepted) {
+      setShowAlert(true);
+      return;
+    }
     const formData = {
       firstName: event.target.firstName.value,
       lastName: event.target.lastName.value,
@@ -299,7 +315,40 @@ export const ProfileComponent = () => {
               </>
             )}
 
-            <Button color="primary" className="submit-button">
+            <FormGroup check>
+              <Label check className={`checkbox-label ${showAlert && !privacyPolicyAccepted ? "text-danger" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={privacyPolicyAccepted}
+                  onChange={handlePrivacyPolicyChange}
+                />{" "}
+                Acepto la{" "}
+                <Link to="/privacy-policy" target="_blank">
+                  política de privacidad
+                </Link>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check className={`checkbox-label ${showAlert && !termsAccepted ? "text-danger" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={handleTermsChange}
+                />{" "}
+                Acepto los{" "}
+                <Link to="/terms-and-conditions" target="_blank">
+                  términos y condiciones
+                </Link>
+              </Label>
+            </FormGroup>
+
+            {showAlert && (
+              <p className="text-danger">
+                Debes aceptar la política de privacidad y los términos y condiciones para guardar los cambios.
+              </p>
+            )}
+
+            <Button color="primary" className="submit-button mt-4" disabled={!privacyPolicyAccepted || !termsAccepted}>
               Guardar Cambios
             </Button>
           </Form>
@@ -378,12 +427,12 @@ export const ProfileComponent = () => {
             <h3 className="form-title">Gestión de Notificaciones</h3>
             <FormGroup check>
               <Label check className="notification-label">
-                <input type="checkbox" /> Recibir notificaciones por correo
+                <input type="checkbox" /> Recibir notificaciones por correo.
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check className="notification-label">
-                <input type="checkbox"  /> Recibir notificaciones por SMS
+                <input type="checkbox"  /> Recibir notificaciones en la aplicación.
               </Label>
             </FormGroup>
             <Button color="primary" className="submit-button mt-3">

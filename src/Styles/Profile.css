@@ -65,7 +65,11 @@
   }
 
 .submit-button.mt-3 {
-  margin-top: 20px; /* Separar el botón de guardar cambios */
+  margin-top: 30px; /* Separar el botón de guardar cambios */
+}
+
+.submit-button.mt-4 {
+  margin-top: 40px; /* Separar el botón de guardar cambios */
 }
 
 /* Select customizado */
@@ -181,4 +185,8 @@
 
 .delete-button:hover {
   background-color: #c82333; /* Rojo más oscuro */
+}
+
+.checkbox-label {
+  font-weight: normal !important; /* Quitar la negrilla */
 }
