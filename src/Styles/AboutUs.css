@@ -107,6 +107,13 @@
     line-height: 1.8;
     color: #555;
   }
+
+
+  .talent-section  h2 {
+    font-size: 2rem;
+    color: #005f73;
+    margin-bottom: 20px;
+  }
   
   /* Responsividad */
   @media (max-width: 768px) {

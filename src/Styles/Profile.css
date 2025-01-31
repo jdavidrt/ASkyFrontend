@@ -10,9 +10,18 @@
     margin-bottom: 30px;
   }
   
+  .profile-picture-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
   .profile-picture {
     width: 100px;
     height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
   }
   
   .profile-form {
@@ -54,6 +63,10 @@
   .submit-button:hover {
     background-color: #028090;
   }
+
+.submit-button.mt-3 {
+  margin-top: 20px; /* Separar el botón de guardar cambios */
+}
 
 /* Select customizado */
 .select-dropdown {
@@ -100,4 +113,72 @@
     background-color: #028090;
     color: #fff;
   }
-  
+
+/* Sidebar styles */
+.profile-sidebar {
+  background-color: #005f73; /* Cambiado al color del botón de guardar cambios */
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: none;
+  background-color: transparent;
+  color: #fff; /* Cambiado al color blanco */
+  font-weight: normal; /* Quitar la negrilla */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  font-family: inherit; /* Cambiado para usar la misma tipografía */
+  text-decoration: none; /* Quitar el efecto de subrayado */
+}
+
+.sidebar-button:hover,
+.sidebar-button.active {
+  background-color: #028090; /* Cambiado al color hover del botón de guardar cambios */
+  color: #fff;
+  text-decoration: none; /* Quitar el efecto de subrayado */
+}
+
+/* Estilos para los botones de mostrar/ocultar contraseña */
+.password-input {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #005f73;
+}
+
+.password-toggle:focus {
+  outline: none;
+}
+
+.notification-label {
+  font-weight: normal !important; /* Quitar la negrilla */
+}
+
+.delete-button {
+  background-color: #dc3545; /* Rojo */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Rojo más oscuro */
+}
