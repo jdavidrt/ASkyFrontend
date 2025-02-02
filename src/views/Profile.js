@@ -118,13 +118,8 @@ export const ProfileComponent = () => {
     return selectedSubjects.flatMap((subject) => topics[subject.value] || []);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!privacyPolicyAccepted || !termsAccepted) {
-      setShowAlert(true);
-      return;
-    }
-    const formData = {
+  const createFormData = (event) => {
+    return {
       firstName: event.target.firstName.value,
       lastName: event.target.lastName.value,
       email: event.target.email.value,
@@ -133,9 +128,34 @@ export const ProfileComponent = () => {
       biography: event.target.biography?.value,
       baseRate: parseFloat(baseRate),
       profilePicture,
+      relatedTopics: relatedTopics.map((topic) => topic.value),
     };
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!privacyPolicyAccepted || !termsAccepted) {
+      setShowAlert(true);
+      return;
+    }
+    const formData = createFormData(event);
     console.log("Datos del formulario:", formData);
     // Aquí puedes enviar formData a tu backend.
+  };
+
+  const createPasswordChangeData = (event) => {
+    return {
+      currentPassword: event.target.currentPassword.value,
+      newPassword: event.target.newPassword.value,
+      confirmPassword: event.target.confirmPassword.value,
+    };
+  };
+
+  const handlePasswordChangeSubmit = (event) => {
+    event.preventDefault();
+    const passwordData = createPasswordChangeData(event);
+    console.log("Datos de cambio de contraseña:", passwordData);
+    // Aquí puedes enviar passwordData a tu backend.
   };
 
   const expertOptions = [
@@ -355,7 +375,7 @@ export const ProfileComponent = () => {
         );
       case "changePassword":
         return (
-          <Form className="profile-form">
+          <Form className="profile-form" onSubmit={handlePasswordChangeSubmit}>
             <h3 className="form-title">Cambio de Contraseña</h3>
             <FormGroup>
               <Label for="currentPassword">Contraseña Actual</Label>
