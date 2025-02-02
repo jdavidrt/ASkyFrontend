@@ -344,7 +344,7 @@ export const ProfileComponent = () => {
                 />{" "}
                 Acepto la{" "}
                 <Link to="/privacy-policy" target="_blank">
-                  política de privacidad
+                  política de privacidad.
                 </Link>
               </Label>
             </FormGroup>
@@ -357,7 +357,7 @@ export const ProfileComponent = () => {
                 />{" "}
                 Acepto los{" "}
                 <Link to="/terms-and-conditions" target="_blank">
-                  términos y condiciones
+                  términos y condiciones.
                 </Link>
               </Label>
             </FormGroup>
