@@ -27,6 +27,8 @@ export const ProfileComponent = () => {
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showExpertAlert, setShowExpertAlert] = useState(false);
+  const [showExpertInfo, setShowExpertInfo] = useState(false);
 
   const toggleTooltip = () => {
     setTooltipOpen(!tooltipOpen);
@@ -38,6 +40,11 @@ export const ProfileComponent = () => {
 
   const handleExpertChange = (selectedOption) => {
     setIsExpert(selectedOption.value === "yes");
+    if (selectedOption.value === "yes") {
+      setShowExpertInfo(true);
+    } else {
+      setShowExpertInfo(false);
+    }
   };
 
   const handleSubjectsChange = (selectedOptions) => {
@@ -138,9 +145,24 @@ export const ProfileComponent = () => {
       setShowAlert(true);
       return;
     }
+    if (isExpert) {
+      setShowExpertAlert(true);
+    } else {
+      const formData = createFormData(event);
+      console.log("Datos del formulario:", formData);
+      // Aquí puedes enviar formData a tu backend.
+    }
+  };
+
+  const handleExpertAlertConfirm = (event) => {
+    setShowExpertAlert(false);
     const formData = createFormData(event);
     console.log("Datos del formulario:", formData);
     // Aquí puedes enviar formData a tu backend.
+  };
+
+  const handleExpertAlertCancel = () => {
+    setShowExpertAlert(false);
   };
 
   const createPasswordChangeData = (event) => {
@@ -332,6 +354,11 @@ export const ProfileComponent = () => {
                     Equivalente a COP: {copRate} pesos colombianos.
                   </small>
                 </FormGroup>
+                {showExpertInfo && (
+                  <p className="text-info">
+                    Aunque selecciones ser experto, puedes seguir haciendo preguntas a otros expertos.
+                  </p>
+                )}
               </>
             )}
 
@@ -371,6 +398,16 @@ export const ProfileComponent = () => {
             <Button color="primary" className="submit-button mt-4" disabled={!privacyPolicyAccepted || !termsAccepted}>
               Guardar Cambios
             </Button>
+            <Modal isOpen={showExpertAlert} toggle={handleExpertAlertCancel}>
+              <ModalHeader toggle={handleExpertAlertCancel}>Confirmar Cambios</ModalHeader>
+              <ModalBody>
+                Si guardas los cambios seleccionando que eres experto, no podrás dejar de ser experto nunca más. ¿Deseas continuar?
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" onClick={handleExpertAlertConfirm}>Aceptar</Button>{' '}
+                <Button color="secondary" onClick={handleExpertAlertCancel}>Cancelar</Button>
+              </ModalFooter>
+            </Modal>
           </Form>
         );
       case "changePassword":

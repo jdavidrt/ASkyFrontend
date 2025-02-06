@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../assets/ASKYLogo.png";
@@ -24,6 +24,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpert, setIsExpert] = useState(false);
   const {
     user,
     isAuthenticated,
@@ -31,6 +32,13 @@ const NavBar = () => {
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    // Aquí deberías obtener el valor de isExpert desde tu backend o estado global
+    // Por ahora, lo simulamos con un valor almacenado en localStorage
+    const expertStatus = localStorage.getItem("isExpert") === "true";
+    setIsExpert(expertStatus);
+  }, [isAuthenticated]);
 
   const logoutWithRedirect = () =>
     logout({
@@ -49,32 +57,19 @@ const NavBar = () => {
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              <NavItem>
-                <NavLink
-                  tag={RouterNavLink}
-                  to="/"
-                  exact
-                  activeClassName="router-link-exact-active"
-                  className="nav-link-custom"
-                >
-                  Inicio
-                </NavLink>
-              </NavItem>
-              {true && (
-                <NavItem>
-                  <NavLink
-                    tag={RouterNavLink}
-                    to="/sobre-nosotros"
-                    exact
-                    activeClassName="router-link-exact-active"
-                    className="nav-link-custom"
-                  >
-                    Sobre Nosotros
-                  </NavLink>
-                </NavItem>
-              )}
-              {false && (
+              {isAuthenticated ? (
                 <>
+                  <NavItem>
+                    <NavLink
+                      tag={RouterNavLink}
+                      to="/catalogo-expertos"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                    >
+                      Catálogo de expertos
+                    </NavLink>
+                  </NavItem>
                   <NavItem>
                     <NavLink
                       tag={RouterNavLink}
@@ -83,20 +78,47 @@ const NavBar = () => {
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
                     >
-                      Preguntas
+                      Preguntas Hechas
                     </NavLink>
                   </NavItem>
-                  {true ? "" : <NavItem>
+                  {isExpert && (
+                    <NavItem>
+                      <NavLink
+                        tag={RouterNavLink}
+                        to="/responder-preguntas"
+                        exact
+                        activeClassName="router-link-exact-active"
+                        className="nav-link-custom"
+                      >
+                        Responder preguntas
+                      </NavLink>
+                    </NavItem>
+                  )}
+                </>
+              ) : (
+                <>
+                  <NavItem>
                     <NavLink
                       tag={RouterNavLink}
-                      to="/askoins"
+                      to="/"
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
                     >
-                      ASKoins
+                      Inicio
                     </NavLink>
-                  </NavItem>}
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      tag={RouterNavLink}
+                      to="/sobre-nosotros"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                    >
+                      Sobre Nosotros
+                    </NavLink>
+                  </NavItem>
                 </>
               )}
             </Nav>
