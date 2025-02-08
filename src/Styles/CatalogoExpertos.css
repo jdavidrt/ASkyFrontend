@@ -105,3 +105,9 @@
   background-color: #067a9e;
   transform: scale(1.05);
 }
+
+.response-rate {
+  font-size: 0.9rem !important;
+  font-weight: bold;
+  font-style: italic;
+}

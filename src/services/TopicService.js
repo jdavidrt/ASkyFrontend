@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const TOPIC_BASE_RES_API_URL = "https://askybackend.onrender.com/topics";
 
 class TopicService {
@@ -24,6 +23,12 @@ class TopicService {
         return axios.delete(`${TOPIC_BASE_RES_API_URL}/${topicId}`);
     }
     
+    // Obtener la lista de temas
+    getTopics() {
+        return axios.get(`${TOPIC_BASE_RES_API_URL}`);
+    }
 }
 
-export default new TopicService();
+// Asigna la instancia a una variable antes de exportarla
+const topicService = new TopicService();
+export default topicService;
