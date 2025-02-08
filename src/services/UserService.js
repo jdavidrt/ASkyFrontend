@@ -36,7 +36,7 @@ class UserService {
     deleteUserById(userId) {
         return axios.delete(`${USER_BASE_RES_API_URL}/${userId}`);
     }
-    
+
 }
 
 export default new UserService();

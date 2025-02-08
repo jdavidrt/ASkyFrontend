@@ -7,6 +7,7 @@ import "../Styles/Profile.css";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import UserService from "../services/UserService";
 
 export const ProfileComponent = () => {
   const { user } = useAuth0();
@@ -29,6 +30,24 @@ export const ProfileComponent = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showExpertAlert, setShowExpertAlert] = useState(false);
   const [showExpertInfo, setShowExpertInfo] = useState(false);
+  const [isUserRegistered, setUserRegistered] = useState(false);
+
+  function findUserByEmail(usuarios, emailBuscado) {
+    return usuarios.find(usuario => usuario.email === emailBuscado) || false;
+  }
+
+  const fetchUsers = async () => {
+    try {
+      const response = await UserService.getAllUsers();
+      console.log(response.data.data)
+      if (!findUserByEmail(response.data.data, user.email)) {
+        console.log("usuario no registrado")
+        setUserRegistered(false)
+      }
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+    }
+  };
 
   const toggleTooltip = () => {
     setTooltipOpen(!tooltipOpen);
@@ -212,14 +231,15 @@ export const ProfileComponent = () => {
     console.log("Cuenta eliminada");
     toggleModal();
   };
+  fetchUsers();
+
 
   const renderSection = () => {
     switch (activeSection) {
       case "personalData":
         return (
           <Form className="profile-form" onSubmit={handleSubmit}>
-            <h3 className="form-title">Editar Perfil</h3>
-
+            {isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
             <FormGroup>
               <Label for="profilePicture">Foto de Perfil</Label>
               <div className="profile-picture-container">
@@ -274,6 +294,19 @@ export const ProfileComponent = () => {
                 disabled
               />
             </FormGroup>
+            {isUserRegistered ? "" :
+              <FormGroup>
+                <Label for="lastName">Contraseña</Label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Ingresa tu contraseña"
+                />
+              </FormGroup>
+            }
+
 
             <FormGroup>
               <Label for="isExpert">¿Eres experto?</Label>
@@ -286,7 +319,7 @@ export const ProfileComponent = () => {
               />
             </FormGroup>
 
-            {isExpert && (
+            {(!isUserRegistered && isExpert) && (
               <>
                 <FormGroup>
                   <Label for="biography">Biografía</Label>
@@ -489,7 +522,7 @@ export const ProfileComponent = () => {
             </FormGroup>
             <FormGroup check>
               <Label check className="notification-label">
-                <input type="checkbox"  /> Recibir notificaciones en la aplicación.
+                <input type="checkbox" /> Recibir notificaciones en la aplicación.
               </Label>
             </FormGroup>
             <Button color="primary" className="submit-button mt-3">

@@ -15,6 +15,7 @@ import CatalogoExpertos from "./views/CatalogoExpertos";
 import Preguntas from "./views/Preguntas";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
+import ProfileRegistrationModal from "./components/ProfileRegistrationModal";
 
 // styles
 import "./App.css";
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/" exact>
               {isAuthenticated ? <Redirect to="/catalogo-expertos" /> : <Home />}
             </Route>
+            <Route path="/profileRegistration" component={ProfileRegistrationModal} />
             <Route path="/profile" component={Profile} />
             <Route path="/external-api" component={ExternalApi} />
             <Route path="/sobre-nosotros" component={SobreNosotros} />
