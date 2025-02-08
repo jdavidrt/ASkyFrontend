@@ -1,15 +1,25 @@
-import React from "react";
-import { Container } from "reactstrap";
-import "../Styles/CatalogoExpertos.css";
+import React, { useEffect, useState } from 'react';
+import topicService from '../services/TopicService';
 
-const CatalogoExpertos = () => {
-  return (
-    <Container className="catalogo-expertos-container">
-      <h1>Catálogo de Expertos</h1>
-      <p>Aquí puedes encontrar a todos los expertos disponibles en ASKy.</p>
-      {/* Aquí puedes agregar más contenido y funcionalidad para el catálogo de expertos */}
-    </Container>
-  );
+const TopicTest = () => {
+    const [topics, setTopics] = useState([]);
+
+    useEffect(() => {
+        topicService.getAllTopics()
+            .then(response => setTopics(response.data))
+            .catch(error => console.error("Error al obtener topics:", error));
+    }, []);
+
+    return (
+        <div>
+            <h2>Lista de Topics</h2>
+            <ul>
+                {topics.map((topic, index) => (
+                    <li key={index}>{topic.name}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
-export default CatalogoExpertos;
+export default TopicTest;
