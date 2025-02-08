@@ -1,6 +1,6 @@
 .catalogo-expertos-container {
   background-color: #fff;
-  padding: 40px;
+  padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
@@ -19,4 +19,89 @@
   font-size: 1rem;
   color: #333;
   margin-bottom: 15px;
+}
+
+.expert-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.expert-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.expert-card p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.expert-card:hover {
+  transform: translateY(-5px);
+}
+
+.expert-card-horizontal {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.expert-card-content {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.expert-card-horizontal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.expert-card-horizontal p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.expert-card-horizontal:hover {
+  transform: translateY(-5px);
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 20px;
+}
+
+.search-button {
+  background-color: #0891b2;
+  border-color: #0891b2;
+  width: 200px;
+}
+
+.search-button:hover {
+  background-color: #067a9e;
+  border-color: #067a9e;
+}
+
+.ask-button {
+  background-color: #0891b2;
+  border-color: #0891b2;
+  margin-left: 20px;
+  border-radius: 25px;
+  padding: 10px 20px;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.ask-button:hover {
+  background-color: #067a9e;
+  transform: scale(1.05);
 }
