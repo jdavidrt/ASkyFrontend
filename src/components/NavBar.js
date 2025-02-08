@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInbox} from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
 import "../Styles/NavBar.css";
 
@@ -18,6 +19,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Dropdown,
 } from "reactstrap";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -25,6 +27,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpert, setIsExpert] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
   const {
     user,
     isAuthenticated,
@@ -32,6 +35,7 @@ const NavBar = () => {
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen); // Función para togglear el dropdown
 
   useEffect(() => {
     // Aquí deberías obtener el valor de isExpert desde tu backend o estado global
@@ -118,6 +122,40 @@ const NavBar = () => {
                     >
                       Sobre Nosotros
                     </NavLink>
+                  </NavItem>
+                </>
+              )}
+            </Nav>
+            <Nav className="d-none d-md-block" navbar>
+              {isAuthenticated && (
+                <>                 
+                  <NavItem>
+                    <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+                      <DropdownToggle
+                        tag="span"
+                        data-toggle="dropdown"
+                        aria-expanded={dropdownOpen}
+                        style={{
+                          color: "#0891B2",
+                          fontSize: "1.8rem",
+                          cursor: "pointer",
+                          padding: "0.5rem",
+                          marginRight: "0.9rem",
+                          transition: "transform 0.2s",
+                          display: "inline-block" // Asegura que el elemento sea inline-block
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                      >
+                        <FontAwesomeIcon icon={faInbox} />
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem header>Notificaciones</DropdownItem>
+                        <DropdownItem>Opción 1</DropdownItem>
+                        <DropdownItem>Opción 2</DropdownItem>
+                        <DropdownItem>Opción 3</DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </NavItem>
                 </>
               )}

@@ -84,7 +84,7 @@ const CatalogoExpertos = () => {
     <Container className="catalogo-expertos-container">
       <h1 className="text-center mb-4">Catálogo de Expertos</h1>
       <Form className="mb-4">
-        <Row form>
+        <Row>
           <Col md={4}>
             <FormGroup>
               <Label for="name">Buscar por nombre</Label>
