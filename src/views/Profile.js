@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, FormGroup, Label, Button, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
@@ -8,6 +8,8 @@ import { FaInfoCircle } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
+import topicService from "../services/TopicService";
+import SubjectsService from "../services/SubjectsService";
 
 export const ProfileComponent = () => {
   const { user } = useAuth0();
@@ -31,21 +33,52 @@ export const ProfileComponent = () => {
   const [showExpertAlert, setShowExpertAlert] = useState(false);
   const [showExpertInfo, setShowExpertInfo] = useState(false);
   const [isUserRegistered, setUserRegistered] = useState(false);
+  const [ASKYuser, setASKYuser] = useState([]);
 
   function findUserByEmail(usuarios, emailBuscado) {
     return usuarios.find(usuario => usuario.email === emailBuscado) || false;
   }
 
+  function findASKYIdBySub(usuarios, auth0Id) {
+    return usuarios.find(usuario => usuario.auth0Id === auth0Id) || false;
+  }
+
+
+
   const fetchUsers = async () => {
     try {
       const response = await UserService.getAllUsers();
-      console.log(response.data.data)
+      console.log("usuarios", response.data.data)
+      console.log("usuario encontrado en users", findASKYIdBySub(response.data.data, user.sub).id)
       if (!findUserByEmail(response.data.data, user.email)) {
         console.log("usuario no registrado")
         setUserRegistered(false)
+      } else {
+        console.log("usuario YA registrado")
+        const response2 = await UserService.getUserById(findASKYIdBySub(response.data.data, user.sub).id);
+        console.log("ASKYuser", response2.data.data)
+        setASKYuser(response2.data.data)
       }
     } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const fetchTopics = async () => {
+    try {
+      const response = await topicService.getAllTopics;
+      console.log("topics", response.data.data)
+    } catch (error) {
       console.error("Error fetching topics:", error);
+    }
+  };
+
+  const fetchSubjects = async () => {
+    try {
+      const response = await SubjectsService.getAllSubjects;
+      console.log("subjects", response.data.data)
+    } catch (error) {
+      console.error("Error fetching Subjects:", error);
     }
   };
 
@@ -231,10 +264,19 @@ export const ProfileComponent = () => {
     console.log("Cuenta eliminada");
     toggleModal();
   };
-  fetchUsers();
+
+  useEffect(() => {
+
+
+
+    fetchUsers();
+    fetchTopics();
+    fetchSubjects();
+  }, []); // 👈 Array vacío asegura que solo se ejecute una vez
 
 
   const renderSection = () => {
+
     switch (activeSection) {
       case "personalData":
         return (
@@ -264,7 +306,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu nombre"
-                value={user.given_name}
+                value={ASKYuser.firstName}
               />
             </FormGroup>
 
@@ -277,7 +319,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu apellido"
-                value={user.family_name}
+                value={ASKYuser.lastName}
               />
             </FormGroup>
 
@@ -290,7 +332,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu correo"
-                defaultValue={user.email}
+                defaultValue={ASKYuser.email}
                 disabled
               />
             </FormGroup>
@@ -329,7 +371,7 @@ export const ProfileComponent = () => {
                     maxLength="500"
                     className="form-control"
                     placeholder="Escribe una breve biografía relacionada a tus campos de experiencia"
-                    value={biography}
+                    value={ASKYuser.biography}
                     onChange={handleBiographyChange}
                   />
                   <small className="form-text text-muted">
