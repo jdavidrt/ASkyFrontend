@@ -194,7 +194,7 @@ const ProfileRegistrationModal = ({ isOpen, toggle }) => {
               maxLength="60"
               className="form-control"
               placeholder="Ingresa tu nombre"
-              defaultValue={user.given_name}
+              value={user.given_name}
             />
           </FormGroup>
 
@@ -207,7 +207,7 @@ const ProfileRegistrationModal = ({ isOpen, toggle }) => {
               maxLength="60"
               className="form-control"
               placeholder="Ingresa tu apellido"
-              defaultValue={user.family_name}
+              value={user.family_name}
             />
           </FormGroup>
 
@@ -220,7 +220,7 @@ const ProfileRegistrationModal = ({ isOpen, toggle }) => {
               maxLength="60"
               className="form-control"
               placeholder="Ingresa tu correo"
-              defaultValue={user.email}
+              value={user.email}
               disabled
             />
           </FormGroup>

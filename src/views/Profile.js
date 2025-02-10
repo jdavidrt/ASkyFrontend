@@ -58,11 +58,13 @@ export const ProfileComponent = () => {
         const response2 = await UserService.getUserById(findASKYIdBySub(response.data.data, user.sub).id);
         console.log("ASKYuser", response2.data.data)
         setASKYuser(response2.data.data)
+        setIsExpert(true)
       }
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
+
 
   const fetchTopics = async () => {
     try {
@@ -91,10 +93,11 @@ export const ProfileComponent = () => {
   };
 
   const handleExpertChange = (selectedOption) => {
-    setIsExpert(selectedOption.value === "yes");
-    if (selectedOption.value === "yes") {
+    if (selectedOption.value === true) {
+      setIsExpert(true);
       setShowExpertInfo(true);
     } else {
+      setIsExpert(false);
       setShowExpertInfo(false);
     }
   };
@@ -178,16 +181,17 @@ export const ProfileComponent = () => {
   };
 
   const createFormData = (event) => {
+    console.log("event", event)
     return {
-      firstName: event.target.firstName.value,
-      lastName: event.target.lastName.value,
-      email: event.target.email.value,
+      firstName: ASKYuser.firstName,
+      lastName: ASKYuser.lastName,
+      //email: event.target.email.value,
       isExpert,
-      subjects: selectedSubjects.map((subject) => subject.value),
-      biography: event.target.biography?.value,
+      //subjects: selectedSubjects.map((subject) => subject.value),
+      biography: ASKYuser.biography,
       baseRate: parseFloat(baseRate),
-      profilePicture,
-      relatedTopics: relatedTopics.map((topic) => topic.value),
+      //profilePicture,
+      //relatedTopics: relatedTopics.map((topic) => topic.value),
     };
   };
 
@@ -202,6 +206,7 @@ export const ProfileComponent = () => {
     } else {
       const formData = createFormData(event);
       console.log("Datos del formulario:", formData);
+      UserService.updateUser(formData)
       // Aquí puedes enviar formData a tu backend.
     }
   };
@@ -233,11 +238,11 @@ export const ProfileComponent = () => {
   };
 
   const expertOptions = [
-    { value: "no", label: "No" },
-    { value: "yes", label: "Sí" },
+    { value: true, label: "Si" },
+    { value: false, label: "No" },
   ];
 
-  console.log(user)
+  console.log(ASKYuser)
   const subjectOptions = [
     { value: "matematicas", label: "Matemáticas" },
     { value: "fisica", label: "Física" },
@@ -265,9 +270,20 @@ export const ProfileComponent = () => {
     toggleModal();
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    const updatedUser = {
+      ...ASKYuser,
+      [name]: value, // Usa el name del input como clave
+    };
+    setCopRate(updatedUser.baseRate * 1000);
+    console.log("updated user", updatedUser)
+
+    setASKYuser(updatedUser); // Notifica al componente padre si es necesario
+  };
+
   useEffect(() => {
-
-
 
     fetchUsers();
     fetchTopics();
@@ -281,7 +297,7 @@ export const ProfileComponent = () => {
       case "personalData":
         return (
           <Form className="profile-form" onSubmit={handleSubmit}>
-            {isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
+            {!isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
             <FormGroup>
               <Label for="profilePicture">Foto de Perfil</Label>
               <div className="profile-picture-container">
@@ -307,6 +323,7 @@ export const ProfileComponent = () => {
                 className="form-control"
                 placeholder="Ingresa tu nombre"
                 value={ASKYuser.firstName}
+                onChange={handleChange}
               />
             </FormGroup>
 
@@ -320,6 +337,7 @@ export const ProfileComponent = () => {
                 className="form-control"
                 placeholder="Ingresa tu apellido"
                 value={ASKYuser.lastName}
+                onChange={handleChange}
               />
             </FormGroup>
 
@@ -336,27 +354,14 @@ export const ProfileComponent = () => {
                 disabled
               />
             </FormGroup>
-            {isUserRegistered ? "" :
-              <FormGroup>
-                <Label for="lastName">Contraseña</Label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="Ingresa tu contraseña"
-                />
-              </FormGroup>
-            }
-
-
             <FormGroup>
-              <Label for="isExpert">¿Eres experto?</Label>
+              <Label for="isConsultant">¿Eres experto?</Label>
               <Select
-                id="isExpert"
+                id="isConsultant"
                 options={expertOptions}
                 onChange={handleExpertChange}
-                placeholder="Selecciona una opción"
+                value={expertOptions.find((option) => option.value === isExpert)}
+                placeholder={"Selecciona una opción"}
                 className="select-dropdown"
               />
             </FormGroup>
@@ -372,34 +377,38 @@ export const ProfileComponent = () => {
                     className="form-control"
                     placeholder="Escribe una breve biografía relacionada a tus campos de experiencia"
                     value={ASKYuser.biography}
-                    onChange={handleBiographyChange}
+                    onChange={handleChange}
                   />
                   <small className="form-text text-muted">
                     {biography.length}/500 caracteres.
                   </small>
                 </FormGroup>
-                <FormGroup>
-                  <Label for="expertSubjects">Asignaturas donde eres experto</Label>
-                  <Select
-                    id="expertSubjects"
-                    options={subjectOptions}
-                    onChange={handleSubjectsChange}
-                    placeholder="Selecciona tus áreas de experiencia"
-                    isMulti
-                    className="select-dropdown"
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="relatedTopics">Temas Relacionados</Label>
-                  <Select
-                    id="relatedTopics"
-                    options={getRelatedTopicsOptions()}
-                    onChange={handleRelatedTopicsChange}
-                    placeholder="Selecciona los temas relacionados"
-                    isMulti
-                    className="select-dropdown"
-                  />
-                </FormGroup>
+                {false && <>
+                  <FormGroup>
+                    <Label for="expertSubjects">Asignaturas donde eres experto</Label>
+                    <Select
+                      id="expertSubjects"
+                      options={subjectOptions}
+                      onChange={handleSubjectsChange}
+                      placeholder="Selecciona tus áreas de experiencia"
+                      isMulti
+                      className="select-dropdown"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="relatedTopics">Temas Relacionados</Label>
+                    <Select
+                      id="relatedTopics"
+                      options={getRelatedTopicsOptions()}
+                      onChange={handleRelatedTopicsChange}
+                      placeholder="Selecciona los temas relacionados"
+                      isMulti
+                      className="select-dropdown"
+                    />
+                  </FormGroup>
+                </>
+                }
+
                 <FormGroup>
                   <Label for="baseRate">
                     Tarifa Base (Askoins){" "}
@@ -422,8 +431,7 @@ export const ProfileComponent = () => {
                     name="baseRate"
                     className="form-control"
                     placeholder="Ingresa tu tarifa base en Askoins para responder una pregunta"
-                    value={baseRate}
-                    onChange={handleBaseRateChange}
+                    onChange={handleChange}
                   />
                   <small className="form-text text-muted">
                     Equivalente a COP: {copRate} pesos colombianos.
