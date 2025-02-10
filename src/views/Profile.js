@@ -349,7 +349,7 @@ export const ProfileComponent = () => {
 
 
   useEffect(() => {
-    fetchToken();
+    //fetchToken();
     fetchUsers();
     fetchTopics();
     fetchSubjects();
