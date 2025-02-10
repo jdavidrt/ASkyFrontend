@@ -1,6 +1,6 @@
 .preguntas-container {
   background-color: #fff;
-  padding: 40px;
+  padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
@@ -11,12 +11,63 @@
 .preguntas-container h1 {
   font-size: 2.5rem;
   color: #0ea5e9;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.preguntas-container h2 {
+  font-size: 2rem;
+  color: #0ea5e9;
+  margin-top: 30px; /* Aumentar el margen superior */
+  margin-bottom: 10px; /* Aumentar el margen inferior */
   font-weight: bold;
 }
 
 .preguntas-container p {
   font-size: 1rem;
   color: #333;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.question-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.question-card h5 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.question-card p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.question-card:hover {
+  transform: translateY(-5px);
+}
+
+.question-card-horizontal {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+  text-align: left;
+}
+
+.question-card-horizontal h5,
+.question-card-horizontal p {
+  text-align: left;
+  margin-left: 0;
+}
+
+.question-card-horizontal:hover {
+  transform: translateY(-5px);
 }

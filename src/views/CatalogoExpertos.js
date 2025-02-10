@@ -153,7 +153,8 @@ const CatalogoExpertos = () => {
       return;
     }
 
-    const deadlineDate = new Date(Date.now() + hours * 3600000).toISOString();
+    const now = new Date();
+    const deadlineDate = new Date(now.getTime() + hours * 3600000).toISOString();
     const questionData = {
       title: title,
       body: question,
@@ -166,7 +167,7 @@ const CatalogoExpertos = () => {
     console.log(JSON.stringify(questionData, null, 2));
   
     try {
-      const userId = 11; // Reemplaza con el ID del usuario actual
+      const userId = 6; // Reemplaza con el ID del usuario actual
       await questionService.createQuestion(questionData, userId);
       console.log("Pregunta enviada exitosamente");
   
@@ -302,7 +303,7 @@ const CatalogoExpertos = () => {
             </Col>
             <Col md={4}>
               <FormGroup>
-                <Label for="price">Precio</Label>
+                <Label for="price">Precio(Askoins)</Label>
                 <Input type="number" name="price" id="price" value={price} onChange={handlePriceChange} style={{ fontSize: "14px" }} />
                 {errors.price && <p className="text-danger">{errors.price}</p>}
               </FormGroup>

@@ -26,6 +26,13 @@ class QuestionService {
         return axios.get(`${QUESTION_BASE_RES_API_URL}/${questionId}`);
     }
 
+    // Obtener preguntas por usuario
+    getQuestionsByUser(userId) {
+        return axios.get(`${QUESTION_BASE_RES_API_URL}/user/${userId}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+    }
+    
     // Eliminar una pregunta por ID
     deleteQuestionById(questionId) {
         return axios.delete(`${QUESTION_BASE_RES_API_URL}/${questionId}`);
