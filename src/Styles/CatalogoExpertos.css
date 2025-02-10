@@ -111,3 +111,25 @@
   font-weight: bold;
   font-style: italic;
 }
+
+.custom-modal {
+  max-width: 600px;
+  margin: 1.75rem auto;
+}
+
+.custom-modal-header {
+  background-color: #0891b2;
+  color: white;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.custom-modal-body {
+  padding: 2rem;
+}
+
+.custom-modal-footer {
+  background-color: #f1f1f1;
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}

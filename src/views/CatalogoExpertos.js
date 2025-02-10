@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Form, FormGroup, Label, Input, Row, Col, Button } from "reactstrap";
+import { Container, Form, FormGroup, Label, Input, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { motion } from "framer-motion";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
@@ -7,6 +7,7 @@ import "../Styles/CatalogoExpertos.css";
 import ExpertoProfile from "../assets/ExpertoProfile.jpg";
 import expertService from "../services/ExpertsService";
 import topicService from "../services/TopicService";
+import questionService from "../services/QuestionService";
 
 const CatalogoExpertos = () => {
   const [experts, setExperts] = useState([]);
@@ -17,6 +18,14 @@ const CatalogoExpertos = () => {
     sortBy: null,
   });
   const [errors, setErrors] = useState({});
+  const [modal, setModal] = useState(false);
+  const [selectedExpert, setSelectedExpert] = useState(null);
+  const [question, setQuestion] = useState("");
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [questionTopic, setQuestionTopic] = useState(null);
+  const [hours, setHours] = useState(2);
+  // const [image, setImage] = useState(null);
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -24,6 +33,8 @@ const CatalogoExpertos = () => {
     { value: "price", label: "Precio de menor a mayor" },
     { value: "rating", label: "Calificación de mayor a menor" },
   ];
+
+  const hourOptions = Array.from({ length: 23 }, (_, i) => ({ value: i + 2, label: `${i + 2} horas` }));
 
   useEffect(() => {
     fetchTopics();
@@ -33,8 +44,9 @@ const CatalogoExpertos = () => {
     try {
       const response = await topicService.getTopics();
       const topicOptions = response.data.data.map((topic) => ({
-        value: topic.name,
+        value: topic.name, // Cambiar a topic.name para el filtro de búsqueda
         label: topic.name,
+        id: topic.id // Agregar id para la ventana emergente
       }));
       setTopics([{ value: "", label: "Ninguno" }, ...topicOptions]);
     } catch (error) {
@@ -79,6 +91,110 @@ const CatalogoExpertos = () => {
 
   const handleSelectChange = (selectedOption, { name }) => {
     setFilters({ ...filters, [name]: selectedOption });
+  };
+
+  const toggleModal = (expert) => {
+    setSelectedExpert(expert);
+    setModal(!modal);
+    if (!modal) {
+      // Limpiar el formulario cuando se abre el modal
+      setTitle("");
+      setQuestion("");
+      setPrice("");
+      setQuestionTopic(null);
+      setHours(2);
+      setErrors({});
+    }
+  };
+
+  const handleQuestionChange = (e) => {
+    setQuestion(e.target.value);
+  };
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*\.?\d*$/.test(value)) {
+      setPrice(value);
+    }
+  };
+
+  const handleQuestionTopicChange = (selectedOption) => {
+    setQuestionTopic(selectedOption);
+  };
+
+  const handleHoursChange = (selectedOption) => {
+    setHours(selectedOption.value);
+  };
+
+  // const handleImageChange = (e) => {
+  //   setImage(e.target.files[0]);
+  // };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!title) newErrors.title = "El título es obligatorio";
+    if (title.length > 80) newErrors.title = "El título no puede tener más de 80 caracteres";
+    if (!question) newErrors.question = "La pregunta es obligatoria";
+    if (question.length > 1000) newErrors.question = "La pregunta no puede tener más de 1000 caracteres";
+    if (!price) newErrors.price = "El precio es obligatorio";
+    if (price < 0) newErrors.price = "El precio no puede ser negativo";
+    if (!questionTopic || questionTopic.value === "") newErrors.questionTopic = "El tema es obligatorio y no puede ser 'Ninguno'";
+    return newErrors;
+  };
+
+  const handleSubmitQuestion = async () => {
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    const deadlineDate = new Date(Date.now() + hours * 3600000).toISOString();
+    const questionData = {
+      title: title,
+      body: question,
+      price: Number(price), // Enviar como número
+      topicId: Number(questionTopic.id), // Usar id en lugar de value
+      deadline: deadlineDate
+    };
+  
+    // Imprimir el JSON que se está enviando
+    console.log(JSON.stringify(questionData, null, 2));
+  
+    try {
+      const userId = 11; // Reemplaza con el ID del usuario actual
+      await questionService.createQuestion(questionData, userId);
+      console.log("Pregunta enviada exitosamente");
+  
+      // Buscar la pregunta creada por el título
+      const searchParams = { keyword: title }; // Cambiar a keyword
+      const searchResponse = await questionService.searchQuestions(searchParams);
+      const createdQuestion = searchResponse.data.data.find(q => q.title === title);
+  
+      // Imprimir la variable createdQuestion
+      console.log("Pregunta creada:", createdQuestion);
+  
+      if (createdQuestion) {
+        // Asignar la pregunta al experto
+        await questionService.assignQuestionToExpert(createdQuestion.id, selectedExpert.userId);
+        console.log("Pregunta asignada al experto exitosamente");
+      } else {
+        console.error("No se encontró la pregunta creada");
+      }
+    } catch (error) {
+      console.error("Error al enviar la pregunta:", error);
+    }
+  
+    setModal(false);
+    setTitle("");
+    setPrice("");
+    setQuestion("");
+    setHours(2);
+    // setImage(null);
   };
 
   const renderStars = (rating) => {
@@ -152,11 +268,68 @@ const CatalogoExpertos = () => {
                 <p>Tarifa: {expert.basePrice} Askoins.</p>
                 <p className="response-rate"><strong><em>Responde el {expert.responseRate}% de las veces.</em></strong></p>
               </div>
-              <Button color="primary" className="ask-button" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2", borderRadius: "20px", padding: "10px 20px" }}>Hacer pregunta</Button>
+              <Button color="primary" className="ask-button" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2", borderRadius: "20px", padding: "10px 20px" }} onClick={() => toggleModal(expert)}>Hacer pregunta</Button>
             </motion.div>
           </Col>
         ))}
       </Row>
+      <Modal isOpen={modal} toggle={toggleModal} className="custom-modal" style={{ maxWidth: "800px" }}>
+        <ModalHeader toggle={toggleModal} className="custom-modal-header">Hacer pregunta a {selectedExpert && `${selectedExpert.firstName} ${selectedExpert.lastName}`}</ModalHeader>
+        <ModalBody className="custom-modal-body">
+          <FormGroup>
+            <Label for="title">Título</Label>
+            <Input type="text" name="title" id="title" value={title} onChange={handleTitleChange} />
+            {errors.title && <p className="text-danger">{errors.title}</p>}
+          </FormGroup>
+          <FormGroup>
+            <Label for="question">Pregunta</Label>
+            <Input type="textarea" name="question" id="question" value={question} onChange={handleQuestionChange} placeholder="Escribe tu pregunta aquí..." style={{ height: "150px" }} />
+            {errors.question && <p className="text-danger">{errors.question}</p>}
+          </FormGroup>
+          <Row form>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="questionTopic">Tema relacionado</Label>
+                <Select
+                  name="questionTopic"
+                  options={topics}
+                  placeholder="Selecciona un tema"
+                  value={questionTopic}
+                  onChange={handleQuestionTopicChange}
+                />
+                {errors.questionTopic && <p className="text-danger">{errors.questionTopic}</p>}
+              </FormGroup>
+            </Col>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="price">Precio</Label>
+                <Input type="number" name="price" id="price" value={price} onChange={handlePriceChange} style={{ fontSize: "14px" }} />
+                {errors.price && <p className="text-danger">{errors.price}</p>}
+              </FormGroup>
+            </Col>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="hours">Límite de tiempo</Label>
+                <Select
+                  name="hours"
+                  options={hourOptions}
+                  placeholder="Selecciona el límite de tiempo"
+                  value={hourOptions.find(option => option.value === hours)}
+                  onChange={handleHoursChange}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          {/* <FormGroup>
+            <Label for="image">Adjuntar imagen (opcional)</Label>
+            <Input type="file" name="image" id="image" onChange={handleImageChange} />
+          </FormGroup> */}
+        </ModalBody>
+        <ModalFooter className="custom-modal-footer">
+          <Button color="primary" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2" }} onClick={handleSubmitQuestion}>Enviar</Button>{' '}
+          <Button color="secondary" onClick={toggleModal}>Cancelar</Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };
