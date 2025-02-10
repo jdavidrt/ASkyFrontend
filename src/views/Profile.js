@@ -10,9 +10,10 @@ import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
 import topicService from "../services/TopicService";
 import SubjectsService from "../services/SubjectsService";
+import { auth } from "express-oauth2-jwt-bearer";
 
 export const ProfileComponent = () => {
-  const { user } = useAuth0();
+  const { user, getAccessTokenSilently, logout } = useAuth0();
   const [isExpert, setIsExpert] = useState(false);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [baseRate, setBaseRate] = useState("");
@@ -36,6 +37,20 @@ export const ProfileComponent = () => {
   const [ASKYuser, setASKYuser] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [auth0Token, setAuth0Token] = useState("");
+
+  const fetchToken = async () => {/*
+    try {
+      const token = await getAccessTokenSilently({
+        audience: "https://dev-csthezp5ifz25yr6.us.auth0.com/api/v2/",
+        scope: "delete:users",
+      });
+      setAuth0Token(token)
+      console.log("Access Token:", token);
+    } catch (error) {
+      console.error("Error obteniendo el token:", error);
+    }*/
+  };
 
 
   const handleResetPassword = async () => {
@@ -268,7 +283,8 @@ export const ProfileComponent = () => {
     { value: false, label: "No" },
   ];
 
-  console.log(ASKYuser)
+  console.log("auth0 user", user)
+  console.log("ASKY user", ASKYuser)
   const subjectOptions = [
     { value: "matematicas", label: "Matemáticas" },
     { value: "fisica", label: "Física" },
@@ -290,8 +306,29 @@ export const ProfileComponent = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleDeleteAccount = () => {
-    // Aquí puedes agregar la lógica para eliminar la cuenta
+  const handleDeleteAccount = async () => {// Ejemplo: myapp.auth0.com
+    /*
+        try {
+          const response = await fetch(`https://dev-csthezp5ifz25yr6.us.auth0.com/api/v2/users/${user.sub}`, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${auth0Token}`,
+              "Content-Type": "application/json",
+            },
+          });
+    
+          if (response.ok) {
+            setMessage("Tu cuenta ha sido eliminada correctamente.");
+            setTimeout(() => {
+              logout(); // Cierra la sesión después de eliminar la cuenta
+            }, 2000);
+          } else {
+            setMessage("Hubo un error al eliminar la cuenta. Inténtalo nuevamente.");
+          }
+        } catch (error) {
+          setMessage("Error de conexión con el servidor.");
+        }*/
+    setModalOpen(true);
     console.log("Cuenta eliminada");
 
     toggleModal();
@@ -310,8 +347,9 @@ export const ProfileComponent = () => {
     setASKYuser(updatedUser); // Notifica al componente padre si es necesario
   };
 
-  useEffect(() => {
 
+  useEffect(() => {
+    fetchToken();
     fetchUsers();
     fetchTopics();
     fetchSubjects();
@@ -324,7 +362,7 @@ export const ProfileComponent = () => {
       case "personalData":
         return (
           <Form className="profile-form" onSubmit={handleSubmit}>
-            {!isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
+            {isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
             <FormGroup>
               <Label for="profilePicture">Foto de Perfil</Label>
               <div className="profile-picture-container">
@@ -454,8 +492,9 @@ export const ProfileComponent = () => {
                   </Label>
                   <input
                     type="number"
-                    id="baseRate"
-                    name="baseRate"
+                    id="basePrice"
+                    name="basePrice"
+                    value={ASKYuser.basePrice}
                     className="form-control"
                     placeholder="Ingresa tu tarifa base en Askoins para responder una pregunta"
                     onChange={handleChange}
