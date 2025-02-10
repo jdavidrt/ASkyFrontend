@@ -34,6 +34,32 @@ export const ProfileComponent = () => {
   const [showExpertInfo, setShowExpertInfo] = useState(false);
   const [isUserRegistered, setUserRegistered] = useState(false);
   const [ASKYuser, setASKYuser] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [message, setMessage] = useState("");
+
+
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch(`https://dev-csthezp5ifz25yr6.us.auth0.com/dbconnections/change_password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: "b0vLtveF0KnZZvtxk38tnLqGvkvEO1Xs",
+          email: ASKYuser.email,
+          connection: "Username-Password-Authentication",
+        }),
+      });
+
+      if (response) {
+        setMessage("Se ha enviado un correo con instrucciones para restablecer tu contraseña.");
+      } else {
+        setMessage("Hubo un error al enviar la solicitud. Por favor, intenta nuevamente.");
+      }
+    } catch (error) {
+      setMessage("Error de conexión con el servidor. Por favor, verifica tu conexión a internet.");
+    }
+    setModalOpen(true);
+  };
 
   function findUserByEmail(usuarios, emailBuscado) {
     return usuarios.find(usuario => usuario.email === emailBuscado) || false;
@@ -267,6 +293,7 @@ export const ProfileComponent = () => {
   const handleDeleteAccount = () => {
     // Aquí puedes agregar la lógica para eliminar la cuenta
     console.log("Cuenta eliminada");
+
     toggleModal();
   };
 
@@ -302,14 +329,14 @@ export const ProfileComponent = () => {
               <Label for="profilePicture">Foto de Perfil</Label>
               <div className="profile-picture-container">
                 <img src={profilePicture} alt="Foto de Perfil" className="profile-picture" />
-                <input
+                {/*<input
                   type="file"
                   id="profilePicture"
                   name="profilePicture"
                   accept="image/*"
                   onChange={handleProfilePictureChange}
                   className="form-control-file"
-                />
+                />*/}
               </div>
             </FormGroup>
 
@@ -481,7 +508,7 @@ export const ProfileComponent = () => {
             <Button color="primary" className="submit-button mt-4" disabled={!privacyPolicyAccepted || !termsAccepted}>
               Guardar Cambios
             </Button>
-            <Modal isOpen={showExpertAlert} toggle={handleExpertAlertCancel}>
+            <Modal toggle={handleExpertAlertCancel}>
               <ModalHeader toggle={handleExpertAlertCancel}>Confirmar Cambios</ModalHeader>
               <ModalBody>
                 Si guardas los cambios seleccionando que eres experto, no podrás dejar de ser experto nunca más. ¿Deseas continuar?
@@ -556,9 +583,15 @@ export const ProfileComponent = () => {
                 </Button>
               </div>
             </FormGroup>
-            <Button color="primary" className="submit-button">
-              Cambiar contraseña
+            {/* Botón para solicitar cambio de contraseña */}
+            <Button
+              color="link"
+              className="sidebar-button"
+              onClick={handleResetPassword}
+            >
+              Cambio de Contraseña
             </Button>
+
           </Form>
         );
       case "notificationSettings":
@@ -622,10 +655,17 @@ export const ProfileComponent = () => {
             <Button
               color="link"
               className={`sidebar-button ${activeSection === "changePassword" ? "active" : ""}`}
-              onClick={() => setActiveSection("changePassword")}
+              onClick={handleResetPassword}
             >
               Cambio de Contraseña
             </Button>
+            <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)}>
+              <ModalHeader toggle={() => setModalOpen(false)}>Confirmación</ModalHeader>
+              <ModalBody>{message}</ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={() => setModalOpen(false)}>Aceptar</Button>
+              </ModalFooter>
+            </Modal>
             <Button
               color="link"
               className={`sidebar-button ${activeSection === "notificationSettings" ? "active" : ""}`}
