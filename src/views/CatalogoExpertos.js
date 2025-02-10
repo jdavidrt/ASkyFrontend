@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Container, Form, FormGroup, Label, Input, Row, Col, Button } from "reactstrap";
 import Select from "react-select";
 import { motion } from "framer-motion";
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import "../Styles/CatalogoExpertos.css";
 import ExpertoProfile from "../assets/ExpertoProfile.jpg";
 import expertService from "../services/ExpertsService";
@@ -80,6 +81,20 @@ const CatalogoExpertos = () => {
     setFilters({ ...filters, [name]: selectedOption });
   };
 
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        stars.push(<FaStar key={i} color="#ffc107" size={18} />);
+      } else if (i - rating < 1) {
+        stars.push(<FaStarHalfAlt key={i} color="#ffc107" size={18} />);
+      } else {
+        stars.push(<FaStar key={i} color="#e4e5e9" size={18} />);
+      }
+    }
+    return stars;
+  };
+
   return (
     <Container className="catalogo-expertos-container">
       <h1 className="text-center mb-4">Catálogo de Expertos</h1>
@@ -133,7 +148,7 @@ const CatalogoExpertos = () => {
               <div className="expert-card-content">
                 <h3>{`${expert.firstName} ${expert.lastName}`}</h3>
                 <p>{expert.biography}</p>
-                <p>Calificación: {expert.averageRating}</p>
+                <p>Calificación: <span style={{ fontSize: "13px" }}>{expert.averageRating}</span> <span style={{ verticalAlign: "top", marginLeft: "5px" }}>{renderStars(expert.averageRating)}</span></p>
                 <p>Tarifa: {expert.basePrice} Askoins.</p>
                 <p className="response-rate"><strong><em>Responde el {expert.responseRate}% de las veces.</em></strong></p>
               </div>
