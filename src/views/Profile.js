@@ -146,16 +146,6 @@ export const ProfileComponent = () => {
     setSelectedSubjects(selectedOptions || []);
   };
 
-  const handleBaseRateChange = (event) => {
-    const rate = parseFloat(event.target.value) || 0;
-    setBaseRate(event.target.value);
-    setCopRate(rate * 1000);
-  };
-
-  const handleBiographyChange = (event) => {
-    setBiography(event.target.value);
-  };
-
   const handleRelatedTopicsChange = (selectedOptions) => {
     setRelatedTopics(selectedOptions || []);
   };
@@ -335,17 +325,18 @@ export const ProfileComponent = () => {
       ...ASKYuser,
       [name]: value, // Usa el name del input como clave
     };
-    setCopRate(updatedUser.baseRate * 1000);
+    setCopRate(ASKYuser.basePrice * 1000);
     console.log("updated user", updatedUser)
 
     setASKYuser(updatedUser); // Notifica al componente padre si es necesario
   };
 
   useEffect(() => {
-    getAccessToken()
+
     fetchUsers();
     fetchTopics();
     fetchSubjects();
+    setCopRate(ASKYuser.basePrice * 1000);
   }, []); // 👈 Array vacío asegura que solo se ejecute una vez
 
 
@@ -493,7 +484,7 @@ export const ProfileComponent = () => {
                     value={ASKYuser.basePrice}
                   />
                   <small className="form-text text-muted">
-                    Equivalente a COP: {copRate} pesos colombianos.
+                    Equivalente a COP: {ASKYuser.basePrice * 1000} pesos colombianos.
                   </small>
                 </FormGroup>
                 {showExpertInfo && (
