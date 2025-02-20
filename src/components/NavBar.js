@@ -82,7 +82,7 @@ const NavBar = () => {
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
                     >
-                      Preguntas Hechas
+                      Consultas
                     </NavLink>
                   </NavItem>
                   {isExpert && (
