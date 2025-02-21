@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Container, Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody, CardTitle, CardText, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from "reactstrap";
+import React, { useState, useEffect, useCallback } from "react";
+import { Container, Nav, NavItem, NavLink, TabContent, TabPane, CardTitle, CardText, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from "reactstrap";
 import classnames from 'classnames';
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import questionService from "../services/QuestionService";
 import topicService from "../services/TopicService";
+import userService from "../services/UserService";
+import { useAuth0 } from "@auth0/auth0-react";
 import "../Styles/Preguntas.css";
 
 const Preguntas = () => {
+  const { user } = useAuth0();
   const [activeTab, setActiveTab] = useState('1');
   const [pendingQuestions, setPendingQuestions] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -16,30 +19,48 @@ const Preguntas = () => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const userId = 6; // Reemplaza con el ID del usuario actual
+  const [userId, setUserId] = useState(null);
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  useEffect(() => {
-    fetchPendingQuestions();
-    fetchTopics();
-    const savedQuestion = sessionStorage.getItem('selectedQuestion');
-    if (savedQuestion) {
-      setSelectedQuestion(JSON.parse(savedQuestion));
-      setModal(true);
+  const fetchUserId = useCallback(async () => {
+    try {
+      const response = await userService.getAllUsers();
+      const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      if (currentUser) {
+        setUserId(currentUser.id);
+      }
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
     }
-  }, []);
+  }, [user.sub]);
 
-  const fetchPendingQuestions = async () => {
+  const fetchPendingQuestions = useCallback(async () => {
     try {
       const response = await questionService.getQuestionsByUser(userId);
       setPendingQuestions(response.data.data);
     } catch (error) {
       console.error("Error fetching pending questions:", error);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchUserId();
+  }, [fetchUserId]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchPendingQuestions();
+      fetchTopics();
+      const savedQuestion = sessionStorage.getItem('selectedQuestion');
+      if (savedQuestion) {
+        setSelectedQuestion(JSON.parse(savedQuestion));
+        setModal(true);
+      }
+    }
+  }, [userId, fetchPendingQuestions]);
 
   const fetchTopics = async () => {
     try {
@@ -72,7 +93,7 @@ const Preguntas = () => {
   const handleCloseModal = () => {
     setModal(false);
     sessionStorage.removeItem('selectedQuestion');
-    if (!selectedQuestion.rating) {
+    if (activeTab === '2' && !selectedQuestion.rating) {
       toggleRatingModal();
     }
   };
@@ -244,7 +265,7 @@ const Preguntas = () => {
         </Modal>
       )}
 
-      {selectedQuestion && !selectedQuestion.rating && (
+      {selectedQuestion && activeTab === '2' && !selectedQuestion.rating && (
         <Modal isOpen={ratingModal} className="custom-modal" style={{ maxWidth: "600px" }} backdrop="static" keyboard={false}>
           <ModalHeader className="custom-modal-header">
             Calificar respuesta de {selectedQuestion && `(${selectedQuestion.expertName})`}

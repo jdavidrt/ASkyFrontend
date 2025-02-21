@@ -3,13 +3,16 @@ import { Container, Form, FormGroup, Label, Input, Row, Col, Button, Modal, Moda
 import Select from "react-select";
 import { motion } from "framer-motion";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { useAuth0 } from "@auth0/auth0-react";
 import "../Styles/CatalogoExpertos.css";
 import ExpertoProfile from "../assets/ExpertoProfile.jpg";
 import expertService from "../services/ExpertsService";
 import topicService from "../services/TopicService";
 import questionService from "../services/QuestionService";
+import userService from "../services/UserService";
 
 const CatalogoExpertos = () => {
+  const { user } = useAuth0();
   const [experts, setExperts] = useState([]);
   const [topics, setTopics] = useState([]);
   const [filters, setFilters] = useState({
@@ -25,7 +28,7 @@ const CatalogoExpertos = () => {
   const [price, setPrice] = useState("");
   const [questionTopic, setQuestionTopic] = useState(null);
   const [hours, setHours] = useState(2);
-  // const [image, setImage] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -36,17 +39,30 @@ const CatalogoExpertos = () => {
 
   const hourOptions = Array.from({ length: 23 }, (_, i) => ({ value: i + 2, label: `${i + 2} horas` }));
 
+  const fetchUserId = useCallback(async () => {
+    try {
+      const response = await userService.getAllUsers();
+      const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      if (currentUser) {
+        setUserId(currentUser.id);
+      }
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
+    }
+  }, [user.sub]);
+
   useEffect(() => {
     fetchTopics();
-  }, []);
+    fetchUserId();
+  }, [fetchUserId]);
 
   const fetchTopics = async () => {
     try {
       const response = await topicService.getTopics();
       const topicOptions = response.data.data.map((topic) => ({
-        value: topic.name, // Cambiar a topic.name para el filtro de búsqueda
+        value: topic.name,
         label: topic.name,
-        id: topic.id // Agregar id para la ventana emergente
+        id: topic.id
       }));
       setTopics([{ value: "", label: "Ninguno" }, ...topicOptions]);
     } catch (error) {
@@ -97,7 +113,6 @@ const CatalogoExpertos = () => {
     setSelectedExpert(expert);
     setModal(!modal);
     if (!modal) {
-      // Limpiar el formulario cuando se abre el modal
       setTitle("");
       setQuestion("");
       setPrice("");
@@ -130,10 +145,6 @@ const CatalogoExpertos = () => {
     setHours(selectedOption.value);
   };
 
-  // const handleImageChange = (e) => {
-  //   setImage(e.target.files[0]);
-  // };
-
   const validateForm = () => {
     const newErrors = {};
     if (!title) newErrors.title = "El título es obligatorio";
@@ -158,29 +169,22 @@ const CatalogoExpertos = () => {
     const questionData = {
       title: title,
       body: question,
-      price: Number(price), // Enviar como número
-      topicId: Number(questionTopic.id), // Usar id en lugar de value
+      price: Number(price),
+      topicId: Number(questionTopic.id),
       deadline: deadlineDate
     };
-  
-    // Imprimir el JSON que se está enviando
-    console.log(JSON.stringify(questionData, null, 2));
-  
+
+    console.log("User ID:", userId); // Imprimir el userId en consola
+
     try {
-      const userId = 6; // Reemplaza con el ID del usuario actual
       await questionService.createQuestion(questionData, userId);
       console.log("Pregunta enviada exitosamente");
-  
-      // Buscar la pregunta creada por el título
-      const searchParams = { keyword: title }; // Cambiar a keyword
+
+      const searchParams = { keyword: title };
       const searchResponse = await questionService.searchQuestions(searchParams);
       const createdQuestion = searchResponse.data.data.find(q => q.title === title);
-  
-      // Imprimir la variable createdQuestion
-      console.log("Pregunta creada:", createdQuestion);
-  
+
       if (createdQuestion) {
-        // Asignar la pregunta al experto
         await questionService.assignQuestionToExpert(createdQuestion.id, selectedExpert.userId);
         console.log("Pregunta asignada al experto exitosamente");
       } else {
@@ -189,13 +193,12 @@ const CatalogoExpertos = () => {
     } catch (error) {
       console.error("Error al enviar la pregunta:", error);
     }
-  
+
     setModal(false);
     setTitle("");
     setPrice("");
     setQuestion("");
     setHours(2);
-    // setImage(null);
   };
 
   const renderStars = (rating) => {
@@ -321,10 +324,6 @@ const CatalogoExpertos = () => {
               </FormGroup>
             </Col>
           </Row>
-          {/* <FormGroup>
-            <Label for="image">Adjuntar imagen (opcional)</Label>
-            <Input type="file" name="image" id="image" onChange={handleImageChange} />
-          </FormGroup> */}
         </ModalBody>
         <ModalFooter className="custom-modal-footer">
           <Button color="primary" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2" }} onClick={handleSubmitQuestion}>Enviar</Button>{' '}
