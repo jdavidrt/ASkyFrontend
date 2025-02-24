@@ -278,7 +278,7 @@ const CatalogoExpertos = () => {
                 <p>Tarifa: {expert.basePrice} Askoins.</p>
                 <p className="response-rate"><strong><em>Responde el {expert.responseRate}% de las veces.</em></strong></p>
               </div>
-              <Button color="primary" className="ask-button" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2", borderRadius: "20px", padding: "10px 20px" }} onClick={() => toggleModal(expert)}>Hacer pregunta</Button>
+              <Button color="primary" className="ask-button" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2", borderRadius: "20px", padding: "10px 20px" }} onClick={() => toggleModal(expert)} disabled={expert.userId === userId}>Hacer pregunta</Button>
             </motion.div>
           </Col>
         ))}
