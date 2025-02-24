@@ -1,0 +1,41 @@
+.askoins-container {
+  padding: 20px;
+}
+
+.askoins-title {
+  color: #0891b2; /* Color acorde a la página */
+  font-size: 2rem; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  margin-bottom: 20px; /* Margen inferior */
+}
+
+.askoins-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  height: 100%; /* Asegurar que las tarjetas tengan el mismo tamaño */
+  background-color: #f9f9f9; /* Fondo claro */
+}
+
+.askoins-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px); /* Elevar ligeramente la tarjeta al pasar el mouse */
+}
+
+.view-more-button {
+  background-color: #0891b2;
+  border-color: #0891b2;
+  color: white;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.view-more-button:hover {
+  background-color: #067a9c;
+  border-color: #067a9c;
+  transform: scale(1.05); /* Aumentar ligeramente el tamaño del botón al pasar el mouse */
+}
+
+.view-more-button-secondary {
+  margin-top: 20px; /* Agregar margen superior al botón de retirar ASKoins */
+}
