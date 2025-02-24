@@ -108,7 +108,7 @@ const NavBar = () => {
                         activeClassName="router-link-exact-active"
                         className="nav-link-custom"
                       >
-                        Responder preguntas
+                        Responder consultas
                       </NavLink>
                     </NavItem>
                   )}
