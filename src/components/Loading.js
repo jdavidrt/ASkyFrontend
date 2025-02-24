@@ -1,9 +1,11 @@
 import React from "react";
-import loading from "../assets/loading.svg";
+import logo from "../assets/ASKYLogo.png";
+import "../Styles/Loading.css";
 
 const Loading = () => (
-  <div className="spinner">
-    <img src={loading} alt="Loading" />
+  <div className="loading-container">
+    <img src={logo} alt="Loading" className="loading-logo" />
+    <div className="loading-spinner"></div>
   </div>
 );
 
