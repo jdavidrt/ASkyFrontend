@@ -205,9 +205,11 @@ const Preguntas = () => {
                   <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
                   <p><strong>Plazo de tiempo:</strong> {new Date(question.deadline).toLocaleString()}</p>
                 </div>
-                <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
-                  Ver más
-                </Button>
+                <div className="button-group">
+                  <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
+                    Ver más
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -228,9 +230,11 @@ const Preguntas = () => {
                     <p><strong>Tu calificación:</strong> {renderStars(question.rating)}</p>
                   )}
                 </div>
-                <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
-                  Ver Respuesta
-                </Button>
+                <div className="button-group">
+                  <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
+                    Ver Respuesta
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

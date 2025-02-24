@@ -13,6 +13,7 @@ import PrivacyPolicy from "./views/PrivacyPolicy";
 import TermsAndConditions from "./views/TermsAndConditions";
 import CatalogoExpertos from "./views/CatalogoExpertos";
 import Preguntas from "./views/Preguntas";
+import ResponderPreguntas from "./views/ResponderPreguntas";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
 import ProfileRegistrationModal from "./components/ProfileRegistrationModal";
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/terms-and-conditions" component={TermsAndConditions} />
             <Route path="/catalogo-expertos" component={CatalogoExpertos} />
             <Route path="/preguntas" component={Preguntas} />
+            <Route path="/responder-preguntas" component={ResponderPreguntas} />
           </Switch>
         </Container>
         <Footer />

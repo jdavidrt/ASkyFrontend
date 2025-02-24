@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox} from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
@@ -23,10 +23,11 @@ import {
 } from "reactstrap";
 
 import { useAuth0 } from "@auth0/auth0-react";
+import userService from "../services/UserService";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpert, setIsExpert] = useState(false);
+  const [isConsultant, setIsConsultant] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
   const {
     user,
@@ -37,12 +38,24 @@ const NavBar = () => {
   const toggle = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen); // Función para togglear el dropdown
 
+  const fetchUserConsultantStatus = useCallback(async () => {
+    if (!user) return;
+    try {
+      const response = await userService.getAllUsers();
+      const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      if (currentUser) {
+        setIsConsultant(currentUser.isConsultant);
+      }
+    } catch (error) {
+      console.error("Error fetching user consultant status:", error);
+    }
+  }, [user]);
+
   useEffect(() => {
-    // Aquí deberías obtener el valor de isExpert desde tu backend o estado global
-    // Por ahora, lo simulamos con un valor almacenado en localStorage
-    const expertStatus = localStorage.getItem("isExpert") === "true";
-    setIsExpert(expertStatus);
-  }, [isAuthenticated]);
+    if (isAuthenticated && user) {
+      fetchUserConsultantStatus();
+    }
+  }, [isAuthenticated, user, fetchUserConsultantStatus]);
 
   const logoutWithRedirect = () =>
     logout({
@@ -85,7 +98,7 @@ const NavBar = () => {
                       Consultas
                     </NavLink>
                   </NavItem>
-                  {isExpert && (
+                  {isConsultant && (
                     <NavItem>
                       <NavLink
                         tag={RouterNavLink}
@@ -172,7 +185,7 @@ const NavBar = () => {
                   </Button>
                 </NavItem>
               )}
-              {isAuthenticated && (
+              {isAuthenticated && user && (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret id="profileDropDown">
                     <img
@@ -216,7 +229,7 @@ const NavBar = () => {
                 </NavItem>
               </Nav>
             )}
-            {isAuthenticated && (
+            {isAuthenticated && user && (
               <Nav
                 className="d-md-none justify-content-between"
                 navbar
