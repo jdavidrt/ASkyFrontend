@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
 import "../Styles/CatalogoExpertos.css";
-import ExpertoProfile from "../assets/ExpertoProfile.jpg";
 import expertService from "../services/ExpertsService";
 import topicService from "../services/TopicService";
 import questionService from "../services/QuestionService";
@@ -29,6 +28,7 @@ const CatalogoExpertos = () => {
   const [questionTopic, setQuestionTopic] = useState(null);
   const [hours, setHours] = useState(2);
   const [userId, setUserId] = useState(null);
+  const [users, setUsers] = useState([]);
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -46,6 +46,7 @@ const CatalogoExpertos = () => {
       if (currentUser) {
         setUserId(currentUser.id);
       }
+      setUsers(response.data.data);
     } catch (error) {
       console.error("Error fetching user ID:", error);
     }
@@ -215,6 +216,11 @@ const CatalogoExpertos = () => {
     return stars;
   };
 
+  const getProfileImageUrl = (expertId) => {
+    const user = users.find(u => u.id === expertId);
+    return user ? user.profileImageUrl : null;
+  };
+
   return (
     <Container className="catalogo-expertos-container">
       <h1 className="text-center mb-4">Catálogo de Expertos</h1>
@@ -264,7 +270,7 @@ const CatalogoExpertos = () => {
         {experts.map((expert) => (
           <Col md={12} key={expert.userId} className="mb-4">
             <motion.div className="expert-card-horizontal" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <img src={ExpertoProfile} alt="Foto de perfil" className="profile-picture" />
+              <img src={getProfileImageUrl(expert.userId)} alt="Foto de perfil" className="profile-picture" />
               <div className="expert-card-content">
                 <h3>{`${expert.firstName} ${expert.lastName}`}</h3>
                 <p>{expert.biography}</p>
