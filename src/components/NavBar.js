@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInbox} from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
+import { faInbox, faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
 import "../Styles/NavBar.css";
 
@@ -29,6 +29,7 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConsultant, setIsConsultant] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
+  const [askoinCount] = useState(100); // Cantidad fija de ASKoins
   const {
     user,
     isAuthenticated,
@@ -111,6 +112,25 @@ const NavBar = () => {
                       </NavLink>
                     </NavItem>
                   )}
+                  <NavItem>
+                    <NavLink
+                      tag={RouterNavLink}
+                      to="/askoins"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "#0891B2", // Color acorde al resto de la página
+                        fontWeight: "bold",
+                        fontSize: "1rem", // Ajustar tamaño de fuente
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCoins} style={{ marginRight: "0.5rem" }} />
+                      ASKoins <span style={{ marginLeft: "0.5rem", backgroundColor: "#0891B2", color: "white", borderRadius: "0.5rem", padding: "0.2rem 0.5rem" }}>{askoinCount}</span>
+                    </NavLink>
+                  </NavItem>
                 </>
               ) : (
                 <>
