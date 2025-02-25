@@ -13,7 +13,7 @@ class TopicService {
     createTopic(topic) {
         return axios.post(TOPIC_BASE_RES_API_URL, topic, {
             headers: {
-                'Accept': 'application/json' 
+                'Accept': 'application/json'
             }
         });
     }
@@ -22,13 +22,11 @@ class TopicService {
     deleteTopicById(topicId) {
         return axios.delete(`${TOPIC_BASE_RES_API_URL}/${topicId}`);
     }
-    
+
     // Obtener la lista de temas
     getTopics() {
         return axios.get(`${TOPIC_BASE_RES_API_URL}`);
     }
 }
 
-// Asigna la instancia a una variable antes de exportarla
-const topicService = new TopicService();
-export default topicService;
+export default new TopicService();

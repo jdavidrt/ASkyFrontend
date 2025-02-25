@@ -22,7 +22,7 @@ class SubjectService {
     deleteSubjectById(subjectId) {
         return axios.delete(`${SUBJECT_BASE_RES_API_URL}/${subjectId}`);
     }
-    
+
 }
 
 export default new SubjectService();
