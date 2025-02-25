@@ -2,7 +2,7 @@
   "name": "auth0-react-sample",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": ". ",
   "scripts": {
     "start": "npm-run-all --parallel spa api-server",
     "build": "react-scripts build",
