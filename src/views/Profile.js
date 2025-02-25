@@ -5,7 +5,6 @@ import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import "../Styles/Profile.css";
 import { FaInfoCircle } from "react-icons/fa";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
 import TopicService from "../services/TopicService";
@@ -21,10 +20,6 @@ export const ProfileComponent = () => {
   const [biography, setBiography] = useState("");
   const [relatedTopics, setRelatedTopics] = useState([]);
   const [activeSection, setActiveSection] = useState("personalData");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [modal, setModal] = useState(false);
   const [profilePicture, setProfilePicture] = useState(user.picture);
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
@@ -150,10 +145,6 @@ export const ProfileComponent = () => {
     setRelatedTopics(selectedOptions || []);
   };
 
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
-  };
-
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -206,7 +197,6 @@ export const ProfileComponent = () => {
         { value: "contemporanea", label: "Historia Contemporánea" },
       ],
     };
-
     return selectedSubjects.flatMap((subject) => topics[subject.value] || []);
   };
 
@@ -215,9 +205,9 @@ export const ProfileComponent = () => {
     return {
       firstName: ASKYuser.firstName,
       lastName: ASKYuser.lastName,
-      //email: event.target.email.value,
+      email: event.target.email.value,
       isExpert,
-      //subjects: selectedSubjects.map((subject) => subject.value),
+      subjects: selectedSubjects.map((subject) => subject.value),
       biography: ASKYuser.biography,
       baseRate: parseFloat(baseRate),
       //profilePicture,
@@ -282,18 +272,6 @@ export const ProfileComponent = () => {
     { value: "historia", label: "Historia" },
   ];
 
-  const toggleShowCurrentPassword = () => {
-    setShowCurrentPassword(!showCurrentPassword);
-  };
-
-  const toggleShowNewPassword = () => {
-    setShowNewPassword(!showNewPassword);
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   const handleDeleteAccount = async () => {
 
     const response = await fetch(`https://dev-csthezp5ifz25yr6.us.auth0.com/api/v2/users/${user.sub}`, {
@@ -321,7 +299,7 @@ export const ProfileComponent = () => {
 
     const updatedUser = {
       ...ASKYuser,
-      [name]: value, // Usa el name del input como clave
+      [name]: value,
     };
     setCopRate(ASKYuser.basePrice * 1000);
     console.log("updated user", updatedUser)
@@ -398,8 +376,8 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu correo"
-                value={ASKYuser ? ASKYuser.email : user.email}
-                disabled
+                value={user.email}
+                onChange={handleExpertChange}
               />
             </FormGroup>
             <FormGroup>
@@ -542,80 +520,7 @@ export const ProfileComponent = () => {
             </Modal>
           </Form>
         );
-      case "changePassword":
-        return (
-          <Form className="profile-form" onSubmit={handlePasswordChangeSubmit}>
-            <h3 className="form-title">Cambio de Contraseña</h3>
-            <FormGroup>
-              <Label for="currentPassword">Contraseña Actual</Label>
-              <div className="password-input">
-                <input
-                  type={showCurrentPassword ? "text" : "password"}
-                  id="currentPassword"
-                  name="currentPassword"
-                  className="form-control"
-                  placeholder="Ingresa tu contraseña actual"
-                />
-                <Button
-                  type="button"
-                  className="password-toggle"
-                  onClick={toggleShowCurrentPassword}
-                >
-                  {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
-                </Button>
-              </div>
-            </FormGroup>
-            <FormGroup>
-              <Label for="newPassword">Nueva Contraseña</Label>
-              <div className="password-input">
-                <input
-                  type={showNewPassword ? "text" : "password"}
-                  id="newPassword"
-                  name="newPassword"
-                  className="form-control"
-                  placeholder="Ingresa tu nueva contraseña"
-                />
-                <Button
-                  type="button"
-                  className="password-toggle"
-                  onClick={toggleShowNewPassword}
-                >
-                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
-                </Button>
-              </div>
-            </FormGroup>
-            <FormGroup>
-              <Label for="confirmPassword">Confirmar Nueva Contraseña</Label>
-              <div className="password-input">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  className="form-control"
-                  placeholder="Confirma tu nueva contraseña"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                />
-                <Button
-                  type="button"
-                  className="password-toggle"
-                  onClick={toggleShowConfirmPassword}
-                >
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                </Button>
-              </div>
-            </FormGroup>
-            {/* Botón para solicitar cambio de contraseña */}
-            <Button
-              color="link"
-              className="sidebar-button"
-              onClick={handleResetPassword}
-            >
-              Cambio de Contraseña
-            </Button>
 
-          </Form>
-        );
       case "notificationSettings":
         return (
           <Form className="profile-form">
