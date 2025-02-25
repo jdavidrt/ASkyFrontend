@@ -8,7 +8,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
-import topicService from "../services/TopicService";
+import TopicService from "../services/TopicService";
 import SubjectsService from "../services/SubjectsService";
 
 export const ProfileComponent = () => {
@@ -108,7 +108,7 @@ export const ProfileComponent = () => {
 
   const fetchTopics = async () => {
     try {
-      const response = await topicService.getAllTopics;
+      const response = await TopicService.getAllTopics();
       console.log("topics", response.data.data)
     } catch (error) {
       console.error("Error fetching topics:", error);
@@ -117,7 +117,7 @@ export const ProfileComponent = () => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await SubjectsService.getAllSubjects;
+      const response = await SubjectsService.getAllSubjects();
       console.log("subjects", response.data.data)
     } catch (error) {
       console.error("Error fetching Subjects:", error);
@@ -272,7 +272,7 @@ export const ProfileComponent = () => {
     { value: false, label: "No" },
   ];
 
-  console.log(ASKYuser)
+  console.log("auth0User", user)
   const subjectOptions = [
     { value: "matematicas", label: "Matemáticas" },
     { value: "fisica", label: "Física" },
@@ -310,8 +310,6 @@ export const ProfileComponent = () => {
     }
 
     alert("Cuenta eliminada correctamente");
-
-    // 3️⃣ Cerrar sesión después de eliminar la cuenta
     logout({ logoutParams: { returnTo: window.location.origin } });
     console.log("Cuenta eliminada");
 
@@ -333,9 +331,10 @@ export const ProfileComponent = () => {
 
   useEffect(() => {
 
-    fetchUsers();
+
     fetchTopics();
     fetchSubjects();
+    fetchUsers();
     setCopRate(ASKYuser.basePrice * 1000);
   }, []); // 👈 Array vacío asegura que solo se ejecute una vez
 
@@ -399,7 +398,7 @@ export const ProfileComponent = () => {
                 maxLength="60"
                 className="form-control"
                 placeholder="Ingresa tu correo"
-                defaultValue={ASKYuser.email}
+                value={ASKYuser ? ASKYuser.email : user.email}
                 disabled
               />
             </FormGroup>
