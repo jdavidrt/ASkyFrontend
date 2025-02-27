@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox, faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
 import "../Styles/NavBar.css";
-
+import DarkModeButton from "./DarkMode";
 import {
   Collapse,
   Container,
@@ -160,8 +160,9 @@ const NavBar = () => {
               )}
             </Nav>
             <Nav className="d-none d-md-block" navbar>
+              <NavItem><DarkModeButton></DarkModeButton></NavItem>
               {isAuthenticated && (
-                <>                 
+                <>
                   <NavItem>
                     <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
                       <DropdownToggle
