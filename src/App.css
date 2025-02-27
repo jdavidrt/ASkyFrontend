@@ -86,3 +86,93 @@
 .result-block-container .result-block {
   opacity: 1;
 }
+
+/* Modo oscuro*/
+/* Contenedor del botón toggle */
+.toggle-container {
+  width: 50px;
+  height: 25px;
+  background: #ccc;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Estilos cuando está en modo oscuro */
+.dark-mode .toggle-container {
+  background: #4d4d4d;
+}
+
+/* Círculo deslizante */
+.toggle-circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+/* Mueve el círculo a la derecha cuando está en modo oscuro */
+.dark-mode .toggle-circle {
+  transform: translateX(25px);
+  background: #fdd835;
+}
+
+/* Ícono dentro del botón */
+.toggle-icon {
+  font-size: 12px;
+  color: #4d4d4d;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Cambia el color del ícono cuando está en modo oscuro */
+.dark-mode .toggle-icon {
+  color: white;
+}
+
+body.dark-mode {
+  background-color: #3a3b3c !important
+}
+
+.dark-mode .navbar {
+  background-color: #3c3e3f !important;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .nav-link {
+  color: #d3d0cc !important;
+}
+
+.dark-mode .catalogo-expertos-container {
+  background-color: #313639;
+  box-shadow: rgba(38, 38, 38, 0.1) 0px 5px 15px;
+}
+
+.dark-mode .form-label {
+  color: #d3d0cc !important;
+}
+
+.dark-mode .expert-card-horizontal {
+  background-color: #3c3e3f !important;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .expert-card-content {
+  color: #d3d0cc !important;
+}
+
+.dark-mode .expert-card-content p {
+  color: #d3d0cc !important;
+}
+
+p.dark-mode {
+  color: #d3d0cc !important;
+}
