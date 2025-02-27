@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Form, FormGroup, Label, Button, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import "../Styles/Profile.css";
 import { FaInfoCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Importar el componente Link
 import UserService from "../services/UserService";
 import TopicService from "../services/TopicService";
 import SubjectsService from "../services/SubjectsService";
+import PrivacyPolicy from "./PrivacyPolicy"; // Importar la vista de PrivacyPolicy
+import TermsAndConditions from "./TermsAndConditions"; // Importar la vista de TermsAndConditions
 
 export const ProfileComponent = () => {
   const { user, logout } = useAuth0();
@@ -25,7 +27,8 @@ export const ProfileComponent = () => {
   const [ASKYuser, setASKYuser] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [message, setMessage] = useState("");
-
+  const [privacyPolicyModal, setPrivacyPolicyModal] = useState(false); // Estado para la ventana emergente de PrivacyPolicy
+  const [termsModal, setTermsModal] = useState(false); // Estado para la ventana emergente de TermsAndConditions
 
   const handleResetPassword = async () => {
     try {
@@ -50,7 +53,6 @@ export const ProfileComponent = () => {
     setModalOpen(true);
   };
 
-
   function findUserByEmail(usuarios, emailBuscado) {
     return usuarios.find(usuario => usuario.email === emailBuscado) || false;
   }
@@ -59,33 +61,24 @@ export const ProfileComponent = () => {
     return usuarios.find(usuario => usuario.auth0Id === auth0Id) || false;
   }
 
-
-
   const fetchUsers = async () => {
     try {
       const response = await UserService.getAllUsers();
-      console.log("usuarios", response.data.data)
-      console.log("usuario encontrado en users", findASKYIdBySub(response.data.data, user.sub).id)
       if (!findUserByEmail(response.data.data, user.email)) {
-        console.log("usuario no registrado")
-        setUserRegistered(false)
+        setUserRegistered(false);
       } else {
-        console.log("usuario YA registrado")
         const response2 = await UserService.getUserById(findASKYIdBySub(response.data.data, user.sub).id);
-        console.log("ASKYuser", response2.data.data)
-        setASKYuser(response2.data.data)
-        setIsConsultant(true)
+        setASKYuser(response2.data.data);
+        setIsConsultant(true);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
-
   const fetchTopics = async () => {
     try {
       const response = await TopicService.getAllTopics();
-      console.log("topics", response.data.data)
     } catch (error) {
       console.error("Error fetching topics:", error);
     }
@@ -98,19 +91,26 @@ export const ProfileComponent = () => {
   const fetchSubjects = async () => {
     try {
       const response = await SubjectsService.getAllSubjects();
-      console.log("subjects", response.data.data);
       setSubjectOptions(formatSubjects(response.data.data));
-      console.log("formatted subjects", subjectOptions);
     } catch (error) {
       console.error("Error fetching Subjects:", error);
     }
   };
+
   const toggleTooltip = () => {
     setTooltipOpen(!tooltipOpen);
   };
 
   const toggleModal = () => {
     setModal(!modal);
+  };
+
+  const togglePrivacyPolicyModal = () => {
+    setPrivacyPolicyModal(!privacyPolicyModal); // Función para togglear la ventana emergente de PrivacyPolicy
+  };
+
+  const toggleTermsModal = () => {
+    setTermsModal(!termsModal); // Función para togglear la ventana emergente de TermsAndConditions
   };
 
   const handlePrivacyPolicyChange = (event) => {
@@ -125,24 +125,16 @@ export const ProfileComponent = () => {
     event.preventDefault(); // Evita el comportamiento por defecto del formulario
 
     try {
-      console.log("SUBMIIIIT BUTTON CLICKED");
-      console.log("F. D.", ASKYuser);
-
       await UserService.updateUser(ASKYuser);
-
-      console.log("Usuario actualizado con éxito");
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
     }
   };
 
-
   const expertOptions = [
     { value: true, label: "Si" },
     { value: false, label: "No" },
   ];
-
-  console.log("auth0User", user)
 
   const handleChange = (eventOrOption) => {
     // Si proviene de un <Select> de react-select
@@ -168,11 +160,7 @@ export const ProfileComponent = () => {
         password: "123456789ASD!!!"
       }));
     }
-
-    console.log("UPDT USR", ASKYuser);
   };
-
-
 
   useEffect(() => {
     fetchTopics();
@@ -345,9 +333,9 @@ export const ProfileComponent = () => {
                   onChange={handlePrivacyPolicyChange}
                 />{" "}
                 Acepto la{" "}
-                <Link to="/privacy-policy" target="_blank">
+                <Button color="link" onClick={togglePrivacyPolicyModal} className="p-0">
                   política de privacidad.
-                </Link>
+                </Button>
               </Label>
             </FormGroup>
             <FormGroup check>
@@ -358,9 +346,9 @@ export const ProfileComponent = () => {
                   onChange={handleTermsChange}
                 />{" "}
                 Acepto los{" "}
-                <Link to="/terms-and-conditions" target="_blank">
+                <Button color="link" onClick={toggleTermsModal} className="p-0">
                   términos y condiciones.
-                </Link>
+                </Button>
               </Label>
             </FormGroup>
             <Button type="submit" className="submit-button mt-4" disabled={!privacyPolicyAccepted || !termsAccepted}>
@@ -369,6 +357,24 @@ export const ProfileComponent = () => {
           </Form>
         </Col>
       </Row>
+      <Modal isOpen={privacyPolicyModal} toggle={togglePrivacyPolicyModal} size="lg">
+        <ModalHeader toggle={togglePrivacyPolicyModal}>Política de Privacidad</ModalHeader>
+        <ModalBody>
+          <PrivacyPolicy />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={togglePrivacyPolicyModal}>Cerrar</Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={termsModal} toggle={toggleTermsModal} size="lg">
+        <ModalHeader toggle={toggleTermsModal}>Términos y Condiciones</ModalHeader>
+        <ModalBody>
+          <TermsAndConditions />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggleTermsModal}>Cerrar</Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };

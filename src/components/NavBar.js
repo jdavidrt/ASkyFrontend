@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
+import { NavLink as RouterNavLink, useHistory } from "react-router-dom"; // Importar useHistory
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox, faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
@@ -38,6 +38,7 @@ const NavBar = () => {
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen); // Función para togglear el dropdown
+  const history = useHistory(); // Inicializar useHistory
 
   const fetchUserConsultantStatus = useCallback(async () => {
     if (!user) return;
@@ -65,11 +66,19 @@ const NavBar = () => {
       },
     });
 
+  const handleLogoClick = () => {
+    if (isAuthenticated) {
+      history.push("/catalogo-expertos");
+    } else {
+      history.push("/");
+    }
+  };
+
   return (
     <div className="nav-container">
       <Navbar color="light" light expand="md" container={false}>
         <Container>
-          <NavbarBrand>
+          <NavbarBrand onClick={handleLogoClick} style={{ cursor: "pointer" }}>
             <img src={logo} alt="ASKY Logo" width="50" />
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
