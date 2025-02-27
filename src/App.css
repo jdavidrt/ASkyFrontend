@@ -152,7 +152,7 @@ body.dark-mode {
 }
 
 .dark-mode .catalogo-expertos-container {
-  background-color: #313639;
+  background-color: #292d2f;
   box-shadow: rgba(38, 38, 38, 0.1) 0px 5px 15px;
 }
 
@@ -174,5 +174,14 @@ body.dark-mode {
 }
 
 p.dark-mode {
+  color: #d3d0cc !important;
+}
+
+.dark-mode .dropdown-menu,
+.dark-mode .dropdown-menu h6,
+.dark-mode .dropdown-menu a,
+.dark-mode .dropdown-menu button {
+  background-color: #3c3e3f !important;
+  box-shadow: #454849 0px 1px 2px 0px;
   color: #d3d0cc !important;
 }
