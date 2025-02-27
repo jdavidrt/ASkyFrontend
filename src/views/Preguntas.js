@@ -9,7 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import "../Styles/Preguntas.css";
 
 const Preguntas = () => {
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [activeTab, setActiveTab] = useState('1');
   const [pendingQuestions, setPendingQuestions] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -38,13 +38,21 @@ const Preguntas = () => {
   }, [user.sub]);
 
   const fetchPendingQuestions = useCallback(async () => {
-    try {
-      const response = await questionService.getQuestionsByUser(userId);
-      setPendingQuestions(response.data.data);
-    } catch (error) {
-      console.error("Error fetching pending questions:", error);
+    if (isAuthenticated && userId) {
+      try {
+        const response = await questionService.getAllQuestions();
+        const userQuestions = response.data.data.filter(
+          (question) => question.userId === userId && question.status === "pending"
+        );
+        setPendingQuestions(userQuestions);
+        if (userQuestions.length === 0) {
+          console.log("El usuario no tiene preguntas pendientes.");
+        }
+      } catch (error) {
+        console.error("Error fetching pending questions:", error);
+      }
     }
-  }, [userId]);
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
     fetchUserId();

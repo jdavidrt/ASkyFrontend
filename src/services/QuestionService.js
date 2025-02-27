@@ -9,44 +9,45 @@ class QuestionService {
         return axios.get(QUESTION_BASE_RES_API_URL);
     }
 
-    createQuestion(question, userId) {
+    createQuestion(questionData, userId) {
+        const formData = new FormData();
+        formData.append('title', questionData.title);
+        formData.append('body', questionData.body);
+        formData.append('price', questionData.price);
+        formData.append('topicId', questionData.topicId);
+        formData.append('userId', userId);
+        formData.append('expertId', questionData.expertId);
+        formData.append('deadline', questionData.deadline);
+        if (questionData.imageUrl) {
+            formData.append('imageUrl', questionData.imageUrl);
+        }
+
         return axios.post(`${QUESTION_BASE_RES_API_URL}?userId=${userId}`, 
-            question, // Solo enviar la pregunta en el cuerpo
+            formData, 
             {
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             }
         );
     }
 
-    // Obtener pregunta por ID
-    getQuestionById(questionId) {
-        return axios.get(`${QUESTION_BASE_RES_API_URL}/${questionId}`);
-    }
-
-    // Obtener preguntas por usuario
-    getQuestionsByUser(userId) {
-        return axios.get(`${QUESTION_BASE_RES_API_URL}/user/${userId}`, {
-            headers: { 'Accept': 'application/json' }
-        });
-    }
-    
     // Eliminar una pregunta por ID
     deleteQuestionById(questionId) {
         return axios.delete(`${QUESTION_BASE_RES_API_URL}/${questionId}`);
     }
 
-    // Asignar pregunta a un experto
-    assignQuestionToExpert(questionId, expertId) {
-        return axios.put(`${QUESTION_BASE_RES_API_URL}/${questionId}/assign-expert/${expertId}`);
+    // Filtrar preguntas basadas en varios parámetros
+    filterQuestions(filters) {
+        const queryParams = new URLSearchParams(filters).toString();
+        return axios.get(`${QUESTION_BASE_RES_API_URL}/filter?${queryParams}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
     }
 
-    // Buscar preguntas utilizando una palabra clave en el título o descripción 
-    searchQuestions(params) {
-        return axios.get(`${QUESTION_BASE_RES_API_URL}/search`, { params });
-    }
 }
 
 // Exportar una instancia de QuestionService

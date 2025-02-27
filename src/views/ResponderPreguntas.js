@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Nav, NavItem, NavLink, TabContent, TabPane, CardTitle, CardText, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from "reactstrap";
 import classnames from 'classnames';
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import questionService from "../services/QuestionService";
+import topicService from "../services/TopicService";
+import userService from "../services/UserService";
+import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "../components/Loading"; // Importar el componente Loading
 import "../Styles/ResponderPreguntas.css";
 
 const ResponderPreguntas = () => {
+  const { user, isAuthenticated } = useAuth0();
   const [activeTab, setActiveTab] = useState('1');
   const [pendingQuestions, setPendingQuestions] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -12,88 +18,79 @@ const ResponderPreguntas = () => {
   const [modal, setModal] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
   const [justification, setJustification] = useState("");
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [expertId, setExpertId] = useState(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState([]); // Definir answeredQuestions
+  const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
+  const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
+  const fetchExpertId = useCallback(async () => {
+    try {
+      const response = await userService.getAllUsers();
+      const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      if (currentUser) {
+        setExpertId(currentUser.id);
+      }
+    } catch (error) {
+      console.error("Error fetching expert ID:", error);
+    }
+  }, [user.sub]);
+
+  const fetchPendingQuestions = useCallback(async () => {
+    if (isAuthenticated && expertId) {
+      try {
+        const filters = { expertId, status: "0" };
+        const response = await questionService.filterQuestions(filters);
+        const expertQuestions = response.data;
+
+        // Obtener nombres de usuarios
+        const questionsWithUserNames = await Promise.all(
+          expertQuestions.map(async (question) => {
+            const userResponse = await userService.getUserById(question.userId);
+            const userName = userResponse.data.data ? `${userResponse.data.data.firstName} ${userResponse.data.data.lastName}` : "Usuario desconocido";
+            return { ...question, userName };
+          })
+        );
+
+        setPendingQuestions(questionsWithUserNames);
+        if (questionsWithUserNames.length === 0) {
+          console.log("El experto no tiene preguntas pendientes.");
+        }
+      } catch (error) {
+        console.error("Error fetching pending questions:", error);
+      } finally {
+        setLoading(false); // Desactivar la pantalla de carga
+      }
+    }
+  }, [isAuthenticated, expertId]);
+
   useEffect(() => {
-    // Ejemplos de preguntas por responder
-    setPendingQuestions([
-      {
-        id: 1,
-        title: "¿Cómo resolver una ecuación cuadrática?",
-        body: "Necesito ayuda para resolver una ecuación cuadrática.",
-        price: 50,
-        topicId: 1,
-        deadline: "2025-02-10T12:14:40.420Z",
-        userName: "Ana Gómez"
-      },
-      {
-        id: 2,
-        title: "¿Qué es la energía potencial?",
-        body: "¿Podrías explicar qué es la energía potencial?",
-        price: 30,
-        topicId: 2,
-        deadline: "2025-02-11T15:00:00.000Z",
-        userName: "Luis Martínez"
-      },
-      {
-        id: 3,
-        title: "¿Cómo funciona la fotosíntesis?",
-        body: "¿Podrías explicar el proceso de la fotosíntesis?",
-        price: 40,
-        topicId: 5,
-        deadline: "2025-02-12T10:00:00.000Z",
-        userName: "María López"
-      }
-    ]);
+    fetchExpertId();
+  }, [fetchExpertId]);
 
-    // Ejemplos de temas
-    setTopics([
-      { id: 1, name: "Matemáticas" },
-      { id: 2, name: "Física" },
-      { id: 5, name: "Biología" }
-    ]);
-
-    // Ejemplos de preguntas respondidas por el experto
-    setAnsweredQuestions([
-      {
-        id: 1,
-        title: "¿Cómo resolver una ecuación cuadrática?",
-        body: "Necesito ayuda para resolver una ecuación cuadrática.",
-        price: 50,
-        topicId: 1,
-        deadline: "2025-02-10T12:14:40.420Z",
-        answer: "La fórmula cuadrática es: x = (-b ± √(b²-4ac)) / 2a",
-        userName: "Ana Gómez",
-        rating: 5
-      },
-      {
-        id: 2,
-        title: "¿Qué es la energía potencial?",
-        body: "¿Podrías explicar qué es la energía potencial?",
-        price: 30,
-        topicId: 2,
-        deadline: "2025-02-11T15:00:00.000Z",
-        answer: "La energía potencial es la energía que posee un objeto debido a su posición en un campo de fuerzas.",
-        userName: "Luis Martínez",
-        rating: 4
-      },
-      {
-        id: 3,
-        title: "¿Cómo funciona la fotosíntesis?",
-        body: "¿Podrías explicar el proceso de la fotosíntesis?",
-        price: 40,
-        topicId: 5,
-        deadline: "2025-02-12T10:00:00.000Z",
-        answer: "La fotosíntesis es el proceso por el cual las plantas convierten la luz solar en energía química.",
-        userName: "María López",
-        rating: 5
+  useEffect(() => {
+    if (expertId) {
+      fetchPendingQuestions();
+      fetchTopics();
+      const savedQuestion = sessionStorage.getItem('selectedQuestion');
+      if (savedQuestion) {
+        setSelectedQuestion(JSON.parse(savedQuestion));
+        setModal(true);
       }
-    ]);
-  }, []);
+    }
+  }, [expertId, fetchPendingQuestions]);
+
+  const fetchTopics = async () => {
+    try {
+      const response = await topicService.getTopics();
+      setTopics(response.data.data);
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+    }
+  };
 
   const getTopicName = (topicId) => {
     const topic = topics.find(t => t.id === topicId);
@@ -123,6 +120,7 @@ const ResponderPreguntas = () => {
   const handleCloseModal = () => {
     setModal(false);
     sessionStorage.removeItem('selectedQuestion');
+    setImagePreview(null); // Cerrar la previsualización de la imagen
   };
 
   const handleCloseRejectModal = () => {
@@ -153,6 +151,14 @@ const ResponderPreguntas = () => {
     }
     return stars;
   };
+
+  const handleImageClick = (imageUrl) => {
+    setImagePreview(imageUrl);
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Container className="responder-preguntas-container">
@@ -213,7 +219,7 @@ const ResponderPreguntas = () => {
                   <p><strong>Plazo de tiempo:</strong> {new Date(question.deadline).toLocaleString()}</p>
                   <p><strong>Usuario:</strong> {question.userName}</p>
                 </div>
-                  <div className="button-group">
+                <div className="button-group">
                   <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
                     Ver más
                   </Button>
@@ -235,6 +241,12 @@ const ResponderPreguntas = () => {
               <Label for="questionBody"><strong>Pregunta:</strong></Label>
               <Input type="textarea" name="questionBody" id="questionBody" value={selectedQuestion.body} readOnly style={{ height: "150px" }} />
             </FormGroup>
+            {selectedQuestion.imageUrl && (
+              <FormGroup>
+                <Label for="questionImage"><strong>Imagen:</strong></Label>
+                <Button color="link" onClick={() => handleImageClick(selectedQuestion.imageUrl)}>Ver imagen</Button>
+              </FormGroup>
+            )}
             <CardText><strong>Precio:</strong> {selectedQuestion.price} Askoins</CardText>
             <CardText><strong>Tema relacionado:</strong> {getTopicName(selectedQuestion.topicId)}</CardText>
             <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
@@ -263,6 +275,12 @@ const ResponderPreguntas = () => {
               <Label for="questionBody"><strong>Pregunta:</strong></Label>
               <Input type="textarea" name="questionBody" id="questionBody" value={selectedQuestion.body} readOnly style={{ height: "150px" }} />
             </FormGroup>
+            {selectedQuestion.imageUrl && (
+              <FormGroup>
+                <Label for="questionImage"><strong>Imagen:</strong></Label>
+                <Button color="link" onClick={() => handleImageClick(selectedQuestion.imageUrl)}>Ver imagen</Button>
+              </FormGroup>
+            )}
             <CardText><strong>Precio:</strong> {selectedQuestion.price} Askoins</CardText>
             <CardText><strong>Tema relacionado:</strong> {getTopicName(selectedQuestion.topicId)}</CardText>
             <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
@@ -296,6 +314,12 @@ const ResponderPreguntas = () => {
               <Label for="questionBody"><strong>Pregunta:</strong></Label>
               <Input type="textarea" name="questionBody" id="questionBody" value={selectedQuestion.body} readOnly style={{ height: "150px" }} />
             </FormGroup>
+            {selectedQuestion.imageUrl && (
+              <FormGroup>
+                <Label for="questionImage"><strong>Imagen:</strong></Label>
+                <Button color="link" onClick={() => handleImageClick(selectedQuestion.imageUrl)}>Ver imagen</Button>
+              </FormGroup>
+            )}
             <CardText><strong>Precio:</strong> {selectedQuestion.price} Askoins</CardText>
             <CardText><strong>Tema relacionado:</strong> {getTopicName(selectedQuestion.topicId)}</CardText>
             <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
@@ -309,6 +333,20 @@ const ResponderPreguntas = () => {
               Enviar
             </Button>
             <Button color="secondary" onClick={handleCloseRejectModal}>Cerrar</Button>
+          </ModalFooter>
+        </Modal>
+      )}
+
+      {imagePreview && (
+        <Modal isOpen={true} className="custom-modal" style={{ maxWidth: "800px" }} backdrop="static" keyboard={false}>
+          <ModalHeader className="custom-modal-header">
+            Previsualización de la imagen
+          </ModalHeader>
+          <ModalBody className="custom-modal-body">
+            <img src={imagePreview} alt="Previsualización" style={{ width: "100%", height: "auto" }} />
+          </ModalBody>
+          <ModalFooter className="custom-modal-footer">
+            <Button color="secondary" onClick={() => setImagePreview(null)}>Cerrar</Button>
           </ModalFooter>
         </Modal>
       )}
