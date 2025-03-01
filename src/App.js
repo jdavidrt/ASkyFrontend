@@ -24,6 +24,7 @@ import "./App.css";
 
 // fontawesome
 import initFontAwesome from "./utils/initFontAwesome";
+import FAQ from "./views/FAQ";
 initFontAwesome();
 
 const App = () => {
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="/profileRegistration" component={ProfileRegistrationModal} />
             <Route path="/profile" component={Profile} />
             <Route path="/external-api" component={ExternalApi} />
+            <Route path="/faq" component={FAQ} />
             <Route path="/sobre-nosotros" component={SobreNosotros} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route path="/terms-and-conditions" component={TermsAndConditions} />

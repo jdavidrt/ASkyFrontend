@@ -29,31 +29,6 @@ const LandingPage = () => {
 
       <Header/>
       </motion.section>
-      {/* <motion.section
-        className="welcome-section"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Container className="text-center">
-          <div className="logo-container">
-            <img src={logo} alt="ASKy Logo" className="asky-logo" />
-          </div>
-          <h1 className="title">¡Bienvenido a ASKy!</h1>
-          <p className="subtitle">
-            La plataforma que te conecta con expertos para obtener respuestas rápidas y confiables.
-          </p>
-          {isAuthenticated ? "" : <Button
-            color="primary"
-            size="lg"
-            className="cta-button"
-            onClick={() => loginWithRedirect()}
-          >
-            Regístrate ahora
-          </Button>}
-
-        </Container>
-      </motion.section> */}
 
       {/* Sección de funcionalidades */}
       <SliderTopics sliderItems={sliderItems}/>
@@ -80,78 +55,12 @@ const LandingPage = () => {
         </Container>
       </section>
 
-
-
-
-      {/* Sección de testimonios */}
-      {/* <section className="testimonials-section">
-        <Container>
-          <h2 className="text-center section-title">Testimonios de nuestros usuarios</h2>
-          <Row className="justify-content-center">
-            {[{ quote: "ASKy me ayudó a resolver dudas rápidamente. ¡Increíble experiencia!", author: "Usuario Satisfecho" },
-            { quote: "Un lugar donde el conocimiento es recompensado. Totalmente recomendado.", author: "Experto Reconocido" },
-            { quote: "La plataforma es intuitiva y muy útil. Me encanta el sistema de ASKoins.", author: "Nuevo Usuario" }].map((item, index) => (
-              <Col md="4" key={index}>
-                <motion.div className="testimonial-card" whileHover={{ scale: 1.05 }}>
-                  <p className="testimonial-quote">"{item.quote}"</p>
-                  <p className="testimonial-author">- {item.author}</p>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section> */}
-
       <Testimonial/>
 
-      {/* Sección de cómo funciona */}
-      {/* <section className="how-it-works-section">
-        <Container>
-          <h2 className="text-center section-title">¿Cómo Funciona?</h2> */}
-
-          {/* Pasos para usuarios */}
-          {/* <div className="steps-block">
-            <h3 className="steps-title">Si tienes preguntas</h3>
-            <div className="steps-container">
-              {[{ step: "Regístrate", desc: "Crea tu cuenta de manera rápida y segura." },
-              { step: "Encuentra expertos", desc: "Filtra y selecciona al experto adecuado para tu consulta." },
-              { step: "Recibe respuestas", desc: "Obtén soluciones claras y rápidas." }].map((item, index) => (
-                <motion.div key={index} className="step-card" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2 }}>
-                  <div className="step-icon">
-                    <span className="step-number">{index + 1}</span>
-                  </div>
-                  <div className="step-details">
-                    <h4>{item.step}</h4>
-                    <p>{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div> */}
       <div id="hire-me" className="pt-32 mt-[0px] bg-[#223740] ">
         <ContactUs />
       </div>
-          {/* Pasos para expertos */}
-          {/* <div className="steps-block">
-            <h3 className="steps-title">Si eres experto</h3>
-            <div className="steps-container">
-              {[{ step: "Habilita tu perfil", desc: "Regístrate y activa la opción para responder consultas." },
-              { step: "Recibe preguntas", desc: "Acepta consultas de usuarios y comienza a responder." },
-              { step: "Gana ASKoins", desc: "Recibe recompensas según la calidad de tus respuestas." }].map((item, index) => (
-                <motion.div key={index} className="step-card" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2 }}>
-                  <div className="step-icon">
-                    <span className="step-number">{index + 1}</span>
-                  </div>
-                  <div className="step-details">
-                    <h4>{item.step}</h4>
-                    <p>{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div> */}
-        {/* </Container>
-      </section> */}
+
     </div>
   );
 };

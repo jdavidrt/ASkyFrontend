@@ -170,6 +170,17 @@ const NavBar = () => {
                   <NavItem>
                     <NavLink
                       tag={RouterNavLink}
+                      to="/faq"
+                      exact
+                      activeClassName="router-link-exact-active"
+                      className="nav-link-custom"
+                    >
+                      FAQ
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      tag={RouterNavLink}
                       to="/sobre-nosotros"
                       exact
                       activeClassName="router-link-exact-active"
