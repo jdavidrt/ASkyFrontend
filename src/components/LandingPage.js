@@ -14,7 +14,7 @@ import CompanyValues from "./CompanyValues";
 import ContactUs from "./ContactUs";
 
 const LandingPage = () => {
-  const { loginWithRedirect } = useAuth0();
+  
   const { isAuthenticated } = useAuth0();
   console.log("User Auth:", isAuthenticated)
 

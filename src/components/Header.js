@@ -3,12 +3,12 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedVideo } from "@cloudinary/react";
-
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Header = () => {
 
-    
-
+    const { loginWithRedirect } = useAuth0();
+const { isAuthenticated } = useAuth0();
     const cld = new Cloudinary({
         cloud: {
           cloudName: "ao73ir9fa",
@@ -81,7 +81,9 @@ const Header = () => {
               </div>
 
               </div>
-              <button className="mt-6 bg-black text-white px-5 py-2 rounded-lg ">
+              <button
+              onClick={() => loginWithRedirect()}
+              className="mt-6 bg-black text-white px-5 py-2 rounded-lg ">
               Empieza ahora
               </button>
             </div>
@@ -159,7 +161,7 @@ const Header = () => {
 </div>
 
 
-<div class="bg-cyan-400 text-white p-6 rounded-lg flex flex-col justify-between">
+<div class="bg-cyan-500 text-white p-6 rounded-lg flex flex-col justify-between">
     <img src="https://res.cloudinary.com/ao73ir9fa/image/upload/v1740842309/screens/AskyApp2_jayhfi.png" alt="Spaced Repetition" class="mb-4 w-full max-w-xs mx-auto"/>
     <h4 class="text-lg font-semibold">Aprendizaje basado en consultas espeficas, probado científicamente.</h4>
 </div>
