@@ -51,9 +51,9 @@ const FAQ = () => {
                 </motion.div>
               ))}
             </div>
-          </div> */}
+          </div> 
          </Container>
-      </section> *
+      </section> 
     </div>
   )
 }
