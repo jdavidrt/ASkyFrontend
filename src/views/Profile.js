@@ -218,20 +218,6 @@ export const ProfileComponent = () => {
                 <Button color="primary" onClick={() => setModalOpen(false)}>Aceptar</Button>
               </ModalFooter>
             </Modal>
-            <Button
-              color="link"
-              className={`sidebar-button ${activeSection === "notificationSettings" ? "active" : ""}`}
-              onClick={() => setActiveSection("notificationSettings")}
-            >
-              Gestión de Notificaciones
-            </Button>
-            <Button
-              color="link"
-              className={`sidebar-button ${activeSection === "deleteAccount" ? "active" : ""}`}
-              onClick={() => setActiveSection("deleteAccount")}
-            >
-              Eliminar mi cuenta
-            </Button>
           </div>
         </Col>
         <Col md={9}>
