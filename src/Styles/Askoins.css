@@ -47,3 +47,15 @@
   background-color: #f1f1f1;
   margin-top: 15px;
 }
+
+.modal-footer .btn-secondary {
+  background-color: #f8f9fa; /* Color de fondo más oscuro */
+  color: #333; /* Color de texto más oscuro */
+  border-color: #ced4da; /* Color de borde */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #e2e6ea; /* Color de fondo más oscuro al pasar el ratón */
+  color: #212529; /* Color de texto más oscuro al pasar el ratón */
+}

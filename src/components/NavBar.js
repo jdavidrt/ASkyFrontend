@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { NavLink as RouterNavLink, useHistory } from "react-router-dom"; // Importar useHistory
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInbox, faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
+import { faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
 import "../Styles/NavBar.css";
 import DarkModeButton from "./DarkMode";
@@ -19,7 +19,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Dropdown,
+  // Dropdown,
 } from "reactstrap";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -28,7 +28,7 @@ import userService from "../services/UserService";
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConsultant, setIsConsultant] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
+  // const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
   const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
   const [profileImageUrl, setProfileImageUrl] = useState(""); // Estado para la imagen de perfil
   const {
@@ -38,7 +38,7 @@ const NavBar = () => {
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen); // Función para togglear el dropdown
+  // const toggleDropdown = () => setDropdownOpen(!dropdownOpen); // Función para togglear el dropdown
   const history = useHistory(); // Inicializar useHistory
 
   const fetchUserConsultantStatus = useCallback(async () => {
@@ -196,7 +196,7 @@ const NavBar = () => {
               <NavItem><DarkModeButton></DarkModeButton></NavItem>
               {isAuthenticated && (
                 <>
-                  <NavItem>
+                  {/* <NavItem>
                     <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
                       <DropdownToggle
                         tag="span"
@@ -223,7 +223,7 @@ const NavBar = () => {
                         <DropdownItem>Opción 3</DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
-                  </NavItem>
+                  </NavItem> */}
                 </>
               )}
             </Nav>
@@ -241,7 +241,7 @@ const NavBar = () => {
               )}
               {isAuthenticated && user && (
                 <UncontrolledDropdown nav inNavbar>
-                  <DropdownToggle nav caret id="profileDropDown">
+                  <DropdownToggle nav caret id="profileDropDown" style={{ display: "flex", alignItems: "center" }}>
                     <img
                       src={profileImageUrl} // Usar la imagen de perfil del estado
                       alt="Profile"

@@ -240,7 +240,7 @@ const CatalogoExpertos = () => {
         stars.push(<FaStar key={i} color="#e4e5e9" size={18} />);
       }
     }
-    return stars;
+    return <div className="stars">{stars}</div>;
   };
 
   const getProfileImageUrl = (expertId) => {
@@ -301,7 +301,7 @@ const CatalogoExpertos = () => {
               <div className="expert-card-content">
                 <h3>{`${expert.firstName} ${expert.lastName}`}</h3>
                 <p>{expert.biography}</p>
-                <p>Calificación: <span style={{ fontSize: "13px" }}>{expert.averageRating}</span> <span style={{ verticalAlign: "top", marginLeft: "5px" }}>{renderStars(expert.averageRating)}</span></p>
+                <p>Calificación: <span style={{ fontSize: "13px" }}>{expert.averageRating}</span> {renderStars(expert.averageRating)}</p>
                 <p>Tarifa: {expert.basePrice} Askoins.</p>
                 <p className="response-rate"><strong><em>Responde el {expert.responseRate}% de las veces.</em></strong></p>
               </div>
