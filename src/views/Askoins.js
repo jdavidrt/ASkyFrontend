@@ -6,7 +6,7 @@ import "../Styles/Askoins.css"; // Usar estilos propios
 
 const Askoins = () => {
   const { user, isAuthenticated } = useAuth0();
-  const [askoinCount] = useState(100); // Cantidad fija de ASKoins
+  const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
   const [isConsultant, setIsConsultant] = useState(false);
   const [rechargeModal, setRechargeModal] = useState(false); // Estado para la ventana emergente de recarga
   const [withdrawModal, setWithdrawModal] = useState(false); // Estado para la ventana emergente de retiro
@@ -23,6 +23,7 @@ const Askoins = () => {
       const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
       if (currentUser) {
         setIsConsultant(currentUser.isConsultant);
+        setAskoinCount(currentUser.amountAskoins || 0); // Actualizar el contador de ASKoins
       }
     } catch (error) {
       console.error("Error fetching user consultant status:", error);

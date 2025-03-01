@@ -29,7 +29,7 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConsultant, setIsConsultant] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
-  const [askoinCount] = useState(100); // Cantidad fija de ASKoins
+  const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
   const {
     user,
     isAuthenticated,
@@ -47,6 +47,7 @@ const NavBar = () => {
       const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
       if (currentUser) {
         setIsConsultant(currentUser.isConsultant);
+        setAskoinCount(currentUser.amountAskoins || 0); // Actualizar el contador de ASKoins
       }
     } catch (error) {
       console.error("Error fetching user consultant status:", error);
