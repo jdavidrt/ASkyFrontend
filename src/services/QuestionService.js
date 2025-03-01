@@ -22,6 +22,8 @@ class QuestionService {
             formData.append('imageUrl', questionData.imageUrl);
         }
 
+        console.log("Datos enviados a createQuestionaaaa:", questionData); // Imprimir los datos en consola
+
         return axios.post(`${QUESTION_BASE_RES_API_URL}?userId=${userId}`, 
             formData, 
             {

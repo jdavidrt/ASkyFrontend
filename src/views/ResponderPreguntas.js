@@ -19,7 +19,32 @@ const ResponderPreguntas = () => {
   const [rejectModal, setRejectModal] = useState(false);
   const [justification, setJustification] = useState("");
   const [expertId, setExpertId] = useState(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState([]); // Definir answeredQuestions
+  const [answeredQuestions, setAnsweredQuestions] = useState([
+    {
+      id: 1,
+      title: "¿Cómo resolver esta ecuación diferencial?",
+      body: "Tengo problemas para resolver esta ecuación diferencial de segundo orden...",
+      price: 50,
+      topicId: 1,
+      deadline: "2025-03-02T23:58:37",
+      userName: "Alice Johnson",
+      answer: "Para resolver esta ecuación diferencial, debes...",
+      rating: 3,
+    },
+    {
+      id: 2,
+      title: "¿Qué es la teoría de la relatividad?",
+      body: "¿Podrías explicarme de manera sencilla qué es la teoría de la relatividad?",
+      price: 30,
+      topicId: 2,
+      deadline: "2025-03-05T12:00:00",
+      userName: "Bob Smith",
+      answer: "La teoría de la relatividad fue desarrollada por Albert Einstein y...",
+
+      rating: 5,
+      imageUrl: "https://example.com/image2.jpg"
+    }
+  ]); // Definir answeredQuestions
   const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
   const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
 
