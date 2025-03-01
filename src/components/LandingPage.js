@@ -6,6 +6,12 @@ import { motion } from "framer-motion";
 import { useAuth0 } from "@auth0/auth0-react";
 import logo from "../assets/ASKYLogo.png";
 import "../Styles/LandingPage.css";
+import Header from "./Header";
+import Testimonial from "./Testimonial";
+import { sliderItems } from "../data/slides";
+import SliderTopics from "./SliderTopics";
+import CompanyValues from "./CompanyValues";
+import ContactUs from "./ContactUs";
 
 const LandingPage = () => {
   const { loginWithRedirect } = useAuth0();
@@ -16,6 +22,14 @@ const LandingPage = () => {
     <div className="landing-page">
       {/* Sección de bienvenida */}
       <motion.section
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+
+      <Header/>
+      </motion.section>
+      {/* <motion.section
         className="welcome-section"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,9 +53,14 @@ const LandingPage = () => {
           </Button>}
 
         </Container>
-      </motion.section>
+      </motion.section> */}
 
       {/* Sección de funcionalidades */}
+      <SliderTopics sliderItems={sliderItems}/>
+
+
+      <CompanyValues/>
+
       <section className="features-section">
         <Container>
           <h2 className="text-center section-title">¿Qué ofrecemos?</h2>
@@ -61,8 +80,11 @@ const LandingPage = () => {
         </Container>
       </section>
 
+
+
+
       {/* Sección de testimonios */}
-      <section className="testimonials-section">
+      {/* <section className="testimonials-section">
         <Container>
           <h2 className="text-center section-title">Testimonios de nuestros usuarios</h2>
           <Row className="justify-content-center">
@@ -78,15 +100,17 @@ const LandingPage = () => {
             ))}
           </Row>
         </Container>
-      </section>
+      </section> */}
+
+      <Testimonial/>
 
       {/* Sección de cómo funciona */}
-      <section className="how-it-works-section">
+      {/* <section className="how-it-works-section">
         <Container>
-          <h2 className="text-center section-title">¿Cómo Funciona?</h2>
+          <h2 className="text-center section-title">¿Cómo Funciona?</h2> */}
 
           {/* Pasos para usuarios */}
-          <div className="steps-block">
+          {/* <div className="steps-block">
             <h3 className="steps-title">Si tienes preguntas</h3>
             <div className="steps-container">
               {[{ step: "Regístrate", desc: "Crea tu cuenta de manera rápida y segura." },
@@ -103,10 +127,12 @@ const LandingPage = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
-
+          </div> */}
+      <div id="hire-me" className="pt-32 mt-[0px] bg-[#223740] ">
+        <ContactUs />
+      </div>
           {/* Pasos para expertos */}
-          <div className="steps-block">
+          {/* <div className="steps-block">
             <h3 className="steps-title">Si eres experto</h3>
             <div className="steps-container">
               {[{ step: "Habilita tu perfil", desc: "Regístrate y activa la opción para responder consultas." },
@@ -123,9 +149,9 @@ const LandingPage = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
-        </Container>
-      </section>
+          </div> */}
+        {/* </Container>
+      </section> */}
     </div>
   );
 };
