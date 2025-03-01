@@ -129,12 +129,14 @@ const { isAuthenticated } = useAuth0();
 <div class="rounded-lg overflow-hidden md:row-span-2 md:row-span-2">
     
     
-    <AdvancedVideo
-    cldVid={cld.video("kbgpauin53c1roj1mbyg")}
-    controls
-    autoPlay
-    muted
-    class="w-full h-full object-cover"
+  <AdvancedVideo 
+      cldVid={cld.video("kbgpauin53c1roj1mbyg")}
+      autoPlay
+      muted
+      loop
+      playsInline
+      controls={false} 
+      className="w-full h-full object-cover"
   />
 
 
