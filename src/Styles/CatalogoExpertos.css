@@ -134,6 +134,10 @@
   border-bottom-right-radius: 0.3rem;
 }
 
+.no-minimize .modal-header .close {
+  display: none;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .expert-card-horizontal {

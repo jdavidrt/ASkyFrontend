@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, FormGroup, Label, Button, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
@@ -299,7 +299,7 @@ export const ProfileComponent = () => {
                 placeholder={"Selecciona una opción"}
                 className="select-dropdown"
                 value={expertOptions.find(option => option.value === ASKYuser.isConsultant)}
-                isDisabled={ASKYuser.isConsultant} // Deshabilitar el campo si el usuario es experto
+                isDisabled={true} // Deshabilitar el campo para que no se pueda modificar
               />
             </FormGroup>
             {(ASKYuser.isConsultant) && (

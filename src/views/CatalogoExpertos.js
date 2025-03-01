@@ -3,15 +3,17 @@ import { Container, Form, FormGroup, Label, Input, Row, Col, Button, Modal, Moda
 import Select from "react-select";
 import { motion } from "framer-motion";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import Loading from "../components/Loading";
 import "../Styles/CatalogoExpertos.css";
 import expertService from "../services/ExpertsService";
 import topicService from "../services/TopicService";
 import questionService from "../services/QuestionService";
 import userService from "../services/UserService";
+import RegistrationForm from "../components/RegistrationForm";
 
 const CatalogoExpertos = () => {
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [experts, setExperts] = useState([]);
   const [topics, setTopics] = useState([]);
   const [filters, setFilters] = useState({
@@ -30,6 +32,7 @@ const CatalogoExpertos = () => {
   const [userId, setUserId] = useState(null);
   const [users, setUsers] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -52,6 +55,25 @@ const CatalogoExpertos = () => {
       console.error("Error fetching user ID:", error);
     }
   }, [user.sub]);
+
+  const fetchUserStatus = useCallback(async () => {
+    if (!user) return;
+    try {
+      const response = await userService.getAllUsers();
+      const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      if (!currentUser) {
+        setModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching user status:", error);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchUserStatus();
+    }
+  }, [isAuthenticated, user, fetchUserStatus]);
 
   useEffect(() => {
     fetchTopics();
@@ -346,8 +368,16 @@ const CatalogoExpertos = () => {
           <Button color="secondary" onClick={toggleModal}>Cancelar</Button>
         </ModalFooter>
       </Modal>
+      <Modal isOpen={modalOpen} size="lg" backdrop="static" modalClassName="no-minimize">
+        <ModalHeader>Registro Incompleto</ModalHeader>
+        <ModalBody>
+          <RegistrationForm user={user} setModalOpen={setModalOpen} toggleModal={() => setModalOpen(false)} />
+        </ModalBody>
+      </Modal>
     </Container>
   );
 };
 
-export default CatalogoExpertos;
+export default withAuthenticationRequired(CatalogoExpertos, {
+  onRedirecting: () => <Loading />,
+});

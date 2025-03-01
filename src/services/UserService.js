@@ -16,9 +16,14 @@ class UserService {
 
     // Crear un nuevo usuario
     createUser(userData) {
-        return axios.post(`${USER_BASE_RES_API_URL}/register`, userData, {
+        const formData = new FormData();
+        for (const key in userData) {
+            formData.append(key, userData[key]);
+        }
+
+        return axios.post(`${USER_BASE_RES_API_URL}/register`, formData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
         });
     }
@@ -44,4 +49,5 @@ class UserService {
 
 }
 
-export default new UserService();
+const userServiceInstance = new UserService();
+export default userServiceInstance;
