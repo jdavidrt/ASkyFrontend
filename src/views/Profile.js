@@ -29,6 +29,8 @@ export const ProfileComponent = () => {
   const [message, setMessage] = useState("");
   const [privacyPolicyModal, setPrivacyPolicyModal] = useState(false); // Estado para la ventana emergente de PrivacyPolicy
   const [termsModal, setTermsModal] = useState(false); // Estado para la ventana emergente de TermsAndConditions
+  const [confirmPasswordModal, setConfirmPasswordModal] = useState(false); // Estado para la ventana emergente de confirmación de cambio de contraseña
+  const [showExpertNotice, setShowExpertNotice] = useState(false); // Estado para mostrar el aviso de experto
 
   const handleResetPassword = async () => {
     try {
@@ -64,12 +66,13 @@ export const ProfileComponent = () => {
   const fetchUsers = async () => {
     try {
       const response = await UserService.getAllUsers();
-      if (!findUserByEmail(response.data.data, user.email)) {
+      const userData = findUserByEmail(response.data.data, user.email);
+      if (!userData) {
         setUserRegistered(false);
       } else {
         const response2 = await UserService.getUserById(findASKYIdBySub(response.data.data, user.sub).id);
         setASKYuser(response2.data.data);
-        setIsConsultant(true);
+        setIsConsultant(response2.data.data.isConsultant);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -113,6 +116,10 @@ export const ProfileComponent = () => {
     setTermsModal(!termsModal); // Función para togglear la ventana emergente de TermsAndConditions
   };
 
+  const toggleConfirmPasswordModal = () => {
+    setConfirmPasswordModal(!confirmPasswordModal); // Función para togglear la ventana emergente de confirmación de cambio de contraseña
+  };
+
   const handlePrivacyPolicyChange = (event) => {
     setPrivacyPolicyAccepted(event.target.checked);
   };
@@ -125,10 +132,15 @@ export const ProfileComponent = () => {
     event.preventDefault(); // Evita el comportamiento por defecto del formulario
 
     try {
-      await UserService.updateUser(ASKYuser);
+      await UserService.updateUser(ASKYuser.id, ASKYuser); // Usar la función updateUser con el ID del usuario y los datos del usuario
+      setMessage("Perfil actualizado exitosamente.");
+      await fetchUsers(); // Actualizar la vista de editar perfil
+      document.getElementById('profileImage').value = ""; // Dejar en blanco el campo de editar imagen
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
+      setMessage("Error al actualizar el perfil. Por favor, intenta nuevamente.");
     }
+    setModalOpen(true);
   };
 
   const expertOptions = [
@@ -139,6 +151,9 @@ export const ProfileComponent = () => {
   const handleChange = (eventOrOption) => {
     // Si proviene de un <Select> de react-select
     if (eventOrOption && eventOrOption.value !== undefined) {
+      if (eventOrOption.value === true && !ASKYuser.isConsultant) {
+        setShowExpertNotice(true); // Mostrar el aviso si selecciona "Sí" por primera vez
+      }
       setASKYuser((prevUser) => ({
         ...prevUser,
         isConsultant: eventOrOption.value, // Guardar el valor de la opción seleccionada
@@ -162,6 +177,14 @@ export const ProfileComponent = () => {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setASKYuser((prevUser) => ({
+      ...prevUser,
+      profileImage: file, // Guardar el archivo de imagen en el estado del usuario
+    }));
+  };
+
   useEffect(() => {
     fetchTopics();
     fetchSubjects();
@@ -183,7 +206,7 @@ export const ProfileComponent = () => {
             <Button
               color="link"
               className={`sidebar-button ${activeSection === "changePassword" ? "active" : ""}`}
-              onClick={handleResetPassword}
+              onClick={toggleConfirmPasswordModal} // Cambiar el evento onClick para mostrar la ventana emergente de confirmación
             >
               Cambio de Contraseña
             </Button>
@@ -215,8 +238,15 @@ export const ProfileComponent = () => {
             {!isUserRegistered ? <h3 className="form-title">Editar Perfil</h3> : <h3 className="form-title">Termina tu registro</h3>}
             <FormGroup>
               <Label for="profilePicture">Foto de Perfil</Label>
-              <div className="profile-picture-container">
-                <img src={user.picture} alt="Foto de Perfil" className="profile-picture" />
+              <div className="profile-picture-container d-flex align-items-center">
+                <img src={ASKYuser.profileImageUrl || user.picture} alt="Foto de Perfil" className="profile-picture" />
+                <input
+                  type="file"
+                  id="profileImage"
+                  name="profileImage"
+                  className="form-control ml-3"
+                  onChange={handleFileChange} // Manejar el cambio de archivo
+                />
               </div>
             </FormGroup>
             <FormGroup>
@@ -267,6 +297,8 @@ export const ProfileComponent = () => {
                 name="isConsultant"
                 placeholder={"Selecciona una opción"}
                 className="select-dropdown"
+                value={expertOptions.find(option => option.value === ASKYuser.isConsultant)}
+                isDisabled={ASKYuser.isConsultant} // Deshabilitar el campo si el usuario es experto
               />
             </FormGroup>
             {(ASKYuser.isConsultant) && (
@@ -318,7 +350,7 @@ export const ProfileComponent = () => {
                     :
                     ""}
                 </FormGroup>
-                {true && (
+                {showExpertNotice && (
                   <p className="text-info">
                     Aunque selecciones ser experto, puedes seguir haciendo preguntas a otros expertos.
                   </p>
@@ -373,6 +405,16 @@ export const ProfileComponent = () => {
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={toggleTermsModal}>Cerrar</Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={confirmPasswordModal} toggle={toggleConfirmPasswordModal}>
+        <ModalHeader toggle={toggleConfirmPasswordModal}>Confirmación de Cambio de Contraseña</ModalHeader>
+        <ModalBody>
+          ¿Estás seguro de que deseas cambiar tu contraseña? Se enviará un correo con las instrucciones para restablecerla.
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={() => { toggleConfirmPasswordModal(); handleResetPassword(); }}>Aceptar</Button>
+          <Button color="secondary" onClick={toggleConfirmPasswordModal}>Cancelar</Button>
         </ModalFooter>
       </Modal>
     </Container>

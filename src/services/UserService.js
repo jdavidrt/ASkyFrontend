@@ -24,10 +24,15 @@ class UserService {
     }
 
     // Actualizar un usuario
-    updateUser(userData) {
-        return axios.put(`${USER_BASE_RES_API_URL}/profile`, userData, {
+    updateUser(userId, userData) {
+        const formData = new FormData();
+        for (const key in userData) {
+            formData.append(key, userData[key]);
+        }
+
+        return axios.put(`${USER_BASE_RES_API_URL}/profile/${userId}`, formData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
         });
     }
