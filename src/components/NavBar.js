@@ -30,6 +30,7 @@ const NavBar = () => {
   const [isConsultant, setIsConsultant] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown
   const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
+  const [profileImageUrl, setProfileImageUrl] = useState(""); // Estado para la imagen de perfil
   const {
     user,
     isAuthenticated,
@@ -48,6 +49,7 @@ const NavBar = () => {
       if (currentUser) {
         setIsConsultant(currentUser.isConsultant);
         setAskoinCount(currentUser.amountAskoins || 0); // Actualizar el contador de ASKoins
+        setProfileImageUrl(currentUser.profileImageUrl || user.picture); // Actualizar la imagen de perfil
       }
     } catch (error) {
       console.error("Error fetching user consultant status:", error);
@@ -58,6 +60,16 @@ const NavBar = () => {
     if (isAuthenticated && user) {
       fetchUserConsultantStatus();
     }
+
+    const handleProfileImageUpdated = () => {
+      fetchUserConsultantStatus(); // Actualizar la imagen de perfil cuando se despache el evento
+    };
+
+    window.addEventListener('profileImageUpdated', handleProfileImageUpdated);
+
+    return () => {
+      window.removeEventListener('profileImageUpdated', handleProfileImageUpdated);
+    };
   }, [isAuthenticated, user, fetchUserConsultantStatus]);
 
   const logoutWithRedirect = () =>
@@ -220,7 +232,7 @@ const NavBar = () => {
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret id="profileDropDown">
                     <img
-                      src={user.picture}
+                      src={profileImageUrl} // Usar la imagen de perfil del estado
                       alt="Profile"
                       className="nav-user-profile rounded-circle"
                       width="50"

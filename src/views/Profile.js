@@ -136,6 +136,7 @@ export const ProfileComponent = () => {
       setMessage("Perfil actualizado exitosamente.");
       await fetchUsers(); // Actualizar la vista de editar perfil
       document.getElementById('profileImage').value = ""; // Dejar en blanco el campo de editar imagen
+      window.dispatchEvent(new Event('profileImageUpdated')); // Despachar un evento personalizado para actualizar la imagen de perfil en el NavBar
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
       setMessage("Error al actualizar el perfil. Por favor, intenta nuevamente.");
