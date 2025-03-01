@@ -83,6 +83,10 @@
   right: 0;
 }
 
+.talent-img {
+  display: inline;
+}
+
 .result-block-container .result-block {
   opacity: 1;
 }
