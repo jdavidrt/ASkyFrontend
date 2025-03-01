@@ -174,7 +174,7 @@ const ContactUs = () => {
                  
                 </div>
               ) : (
-                "Send"
+                "Enviar"
               )}
             </button>
           </form>
