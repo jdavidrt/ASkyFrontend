@@ -138,7 +138,7 @@ const Preguntas = () => {
         stars.push(<FaStar key={i} color="#e4e5e9" size={18} />);
       }
     }
-    return stars;
+    return <div className="stars">{stars}</div>;
   };
 
   // Ejemplos de preguntas respondidas
@@ -235,7 +235,10 @@ const Preguntas = () => {
                   <p><strong>Plazo de tiempo:</strong> {new Date(question.deadline).toLocaleString()}</p>
                   <p><strong>Respondido por:</strong> {question.expertName}</p>
                   {question.rating > 0 && (
-                    <p><strong>Tu calificación:</strong> {renderStars(question.rating)}</p>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <p><strong>Tu calificación:</strong></p>
+                      <div style={{ marginLeft: "10px" }}>{renderStars(question.rating)}</div>
+                    </div>
                   )}
                 </div>
                 <div className="button-group">

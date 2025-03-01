@@ -31,7 +31,7 @@ const Footer = () => {
 
   return (
     <footer className="footer bg-dark text-white text-center p-3">
-      <div className="footer-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
+      <div className="footer-logo" onClick={handleLogoClick} style={{ cursor: "pointer", display: "flex", justifyContent: "center" }}>
         <img src={logo} alt="ASKY Logo" />
       </div>
       <div className="legal-info" style={{ marginBottom: "0.5rem" }}>

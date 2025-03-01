@@ -33,6 +33,7 @@ const CatalogoExpertos = () => {
   const [users, setUsers] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [askoinCount, setAskoinCount] = useState(0); // Estado para la cantidad de ASKoins
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -49,6 +50,7 @@ const CatalogoExpertos = () => {
       const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
       if (currentUser) {
         setUserId(currentUser.id);
+        setAskoinCount(currentUser.amountAskoins || 0); // Actualizar la cantidad de ASKoins
       }
       setUsers(response.data.data);
     } catch (error) {
@@ -186,6 +188,7 @@ const CatalogoExpertos = () => {
     if (question.length > 1000) newErrors.question = "La pregunta no puede tener más de 1000 caracteres";
     if (!price) newErrors.price = "El precio es obligatorio";
     if (price < 0) newErrors.price = "El precio no puede ser negativo";
+    if (price > askoinCount) newErrors.price = "No tienes suficientes ASKoins para hacer esta pregunta";
     if (!questionTopic || questionTopic.value === "") newErrors.questionTopic = "El tema es obligatorio y no puede ser 'Ninguno'";
     return newErrors;
   };
