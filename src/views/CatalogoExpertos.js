@@ -29,6 +29,7 @@ const CatalogoExpertos = () => {
   const [hours, setHours] = useState(2);
   const [userId, setUserId] = useState(null);
   const [users, setUsers] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -146,6 +147,15 @@ const CatalogoExpertos = () => {
     setHours(selectedOption.value);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImageUrl(file);
+    } else {
+      setErrors({ ...errors, imageUrl: "Solo se permiten archivos de imagen" });
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!title) newErrors.title = "El título es obligatorio";
@@ -166,31 +176,25 @@ const CatalogoExpertos = () => {
     }
 
     const now = new Date();
-    const deadlineDate = new Date(now.getTime() + hours * 3600000).toISOString();
+    const deadlineDate = new Date(now.getTime() + hours * 3600000).toISOString().slice(0, 19); // Formato: 2025-03-02T23:58:37
     const questionData = {
       title: title,
       body: question,
       price: Number(price),
       topicId: Number(questionTopic.id),
-      deadline: deadlineDate
+      deadline: deadlineDate,
+      expertId: selectedExpert.userId
     };
 
-    console.log("User ID:", userId); // Imprimir el userId en consola
+    if (imageUrl) {
+      questionData.imageUrl = imageUrl;
+    }
+
+    console.log("Datos enviados a createQuestion:", questionData); // Imprimir los datos en consola
 
     try {
       await questionService.createQuestion(questionData, userId);
       console.log("Pregunta enviada exitosamente");
-
-      const searchParams = { keyword: title };
-      const searchResponse = await questionService.searchQuestions(searchParams);
-      const createdQuestion = searchResponse.data.data.find(q => q.title === title);
-
-      if (createdQuestion) {
-        await questionService.assignQuestionToExpert(createdQuestion.id, selectedExpert.userId);
-        console.log("Pregunta asignada al experto exitosamente");
-      } else {
-        console.error("No se encontró la pregunta creada");
-      }
     } catch (error) {
       console.error("Error al enviar la pregunta:", error);
     }
@@ -200,6 +204,7 @@ const CatalogoExpertos = () => {
     setPrice("");
     setQuestion("");
     setHours(2);
+    setImageUrl(null);
   };
 
   const renderStars = (rating) => {
@@ -295,6 +300,11 @@ const CatalogoExpertos = () => {
             <Label for="question">Pregunta</Label>
             <Input type="textarea" name="question" id="question" value={question} onChange={handleQuestionChange} placeholder="Escribe tu pregunta aquí..." style={{ height: "150px" }} />
             {errors.question && <p className="text-danger">{errors.question}</p>}
+          </FormGroup>
+          <FormGroup>
+            <Label for="image">Adjuntar imagen</Label>
+            <Input type="file" name="image" id="image" accept="image/*" onChange={handleImageChange} />
+            {errors.imageUrl && <p className="text-danger">{errors.imageUrl}</p>}
           </FormGroup>
           <Row form>
             <Col md={4}>
