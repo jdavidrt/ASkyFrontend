@@ -40,17 +40,15 @@ const AboutUs = () => {
             >
               <h3 className="mission-title">Nuestra Misión</h3>
               <p className="mission-text">
-                Para 2026, seremos la plataforma líder en Colombia para conectar
-                expertos y usuarios en busca de respuestas especializadas,
-                creando un espacio confiable y accesible.
+              En ASky conectamos a personas con expertos en diversos campos del conocimiento para resolver dudas y preguntas de manera rápida y confiable. Nuestro objetivo es facilitar una plataforma accesible y eficiente que permite el intercambio de conocimiento, ayudando tanto a quienes buscan soluciones como a quienes desean generar ingresos compartiendo su experiencia.
               </p>
+
+              {/* Espacio adicional entre misión y visión */}
+              <div style={{ marginBottom: '20px' }}></div>
 
               <h3 className="vision-title">Nuestra Visión</h3>
               <p className="vision-text">
-                Queremos facilitar el intercambio de conocimiento mediante una
-                plataforma accesible y eficiente, ayudando tanto a quienes
-                buscan soluciones como a quienes desean generar ingresos
-                compartiendo su experiencia.
+              Para el 2026, seremos la plataforma que facilite la conexión de expertos y usuarios que buscan respuestas especializadas en Colombia. Buscamos ser una referencia en soluciones rápidas y efectivas, creando un espacio confiable y accesible donde el conocimiento se valore y recompense.
               </p>
             </motion.div>
           </Col>
