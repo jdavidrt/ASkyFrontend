@@ -68,8 +68,10 @@ export const ProfileComponent = () => {
       const response = await UserService.getAllUsers();
       const userData = findUserByEmail(response.data.data, user.email);
       if (!userData) {
+        console.log("Usuario N000 Registrado")
         setUserRegistered(false);
       } else {
+        console.log("Usuario Registrado")
         const response2 = await UserService.getUserById(findASKYIdBySub(response.data.data, user.sub).id);
         setASKYuser(response2.data.data);
         setIsConsultant(response2.data.data.isConsultant);
@@ -285,7 +287,7 @@ export const ProfileComponent = () => {
                 placeholder={"Selecciona una opción"}
                 className="select-dropdown"
                 value={expertOptions.find(option => option.value === ASKYuser.isConsultant)}
-                isDisabled={true} // Deshabilitar el campo para que no se pueda modificar
+                isDisabled={isUserRegistered ? false : true} // Deshabilitar el campo para que no se pueda modificar
               />
             </FormGroup>
             {(ASKYuser.isConsultant) && (
