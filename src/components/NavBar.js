@@ -3,6 +3,7 @@ import { NavLink as RouterNavLink, useHistory } from "react-router-dom"; // Impo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons"; // Cambiar el icono a una bandeja de entrada
 import logo from "../assets/ASKYLogo.png";
+import ExpertoProfile from "../assets/ExpertoProfile.jpg"
 import "../Styles/NavBar.css";
 import DarkModeButton from "./DarkMode";
 import {
@@ -86,6 +87,8 @@ const NavBar = () => {
       history.push("/");
     }
   };
+
+  console.log("Default Pic", profileImageUrl)
 
   return (
     <div className="nav-container">
@@ -243,7 +246,7 @@ const NavBar = () => {
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret id="profileDropDown" style={{ display: "flex", alignItems: "center" }}>
                     <img
-                      src={profileImageUrl} // Usar la imagen de perfil del estado
+                      src={profileImageUrl ? profileImageUrl : ExpertoProfile} // Usar la imagen de perfil del estado
                       alt="Profile"
                       className="nav-user-profile rounded-circle"
                       width="50"
@@ -291,12 +294,12 @@ const NavBar = () => {
               >
                 <NavItem>
                   <span className="user-info">
-                    <img
+                    {user.picture ? <img
                       src={user.picture}
                       alt="Profile"
                       className="nav-user-profile d-inline-block rounded-circle mr-3"
                       width="50"
-                    />
+                    /> : ""}
                     <h6 className="d-inline-block">{user.name}</h6>
                   </span>
                 </NavItem>
