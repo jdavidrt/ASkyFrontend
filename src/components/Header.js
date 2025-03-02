@@ -54,7 +54,7 @@ const { isAuthenticated } = useAuth0();
       <div
         id="home"
         className="relative w-full"
-        style={{ backgroundImage: "linear-gradient(62deg, #EEF7FB 0 50%,rgb(193, 227, 243) 0% 100%)" }}
+        style={{ backgroundImage: "linear-gradient(55deg, #EEF7FB 0 50%,rgb(193, 227, 243) 0% 100%)" }}
       >
         <div className="relative flex w-full">
           {/* Left Section - Stays Fixed Until Grid Scroll Ends */}

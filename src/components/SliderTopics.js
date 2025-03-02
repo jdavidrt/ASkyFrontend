@@ -90,7 +90,10 @@ const SliderTopics = ({ sliderItems }) => {
       };
 
   return (
-    <div className="container m-auto mt-8 ">   
+    <div 
+    className="container m-auto py-20 "
+    style={{ backgroundImage: "linear-gradient(to bottom, #EEF7FB 0%, #E0F3FB 100%)" }}
+    >   
     <div className="px-3">
       <div className=" max-w-sm  md:max-w-5xl xl:max-w-6xl px-5 lg:px-14 overflow-auto mx-auto bg-white rounded-2xl z-20 "
       style={{

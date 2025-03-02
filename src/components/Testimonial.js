@@ -54,7 +54,7 @@ const Testimonial = () => {
 <div id="testimonial">
       <div
         className="bg-[#E0F3FB] max-h-[450px] py-12 lg:px-12 md:px-5 px-3 rounded-lg"
-        style={{ backgroundImage: "linear-gradient(-62deg, #EEF7FB 0 50%, white 0% 100%)", width: "100%" }}
+        style={{ backgroundImage: "linear-gradient(-16deg, #EEF7FB 0 50%, white 0% 100%)", width: "100%" }}
       >
         <div className="lg:container mx-auto px-0 sm:max-h-[350px]">
           <div className="text-center">
