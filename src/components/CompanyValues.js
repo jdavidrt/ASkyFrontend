@@ -46,7 +46,7 @@ const HandlePre = () => {
 };
   return (
 <div className="bg-[#E0F3FB]  pt-10">    
-<h1 className="text-[#223740] text-center font-recoletaBlack text-5xl md:text-5xl lg:text-7xl xl:text-7xl mt-0 md:mt-10">
+<h1 className="text-[#223740] text-center font-recoletaBlack font-bold text-5xl md:text-5xl lg:text-7xl xl:text-7xl mt-0 md:mt-10">
       Nuestros valores
     </h1>
 <section className="container mx-auto flex justify-center items-center min-h-screen sm:flex-row md:px-24 px-5">
