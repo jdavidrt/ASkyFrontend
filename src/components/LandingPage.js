@@ -39,7 +39,7 @@ const LandingPage = () => {
 
       <section className="features-section">
         <Container>
-          <h2 className="text-center section-title">¿Qué ofrecemos?</h2>
+          <h2 className="text-center font-extrabold text-5xl my-20 text-[#48AEDD]">¿Qué ofrecemos?</h2>
           <Row>
             {[{ icon: faUser, title: "Conecta con expertos", description: "Encuentra a los mejores en su campo para resolver tus dudas." },
             { icon: faCommentDots, title: "Consultas rápidas", description: "Haz preguntas y recibe respuestas en tiempo récord." },
