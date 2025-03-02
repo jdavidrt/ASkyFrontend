@@ -20,6 +20,7 @@ const Preguntas = () => {
   const [comment, setComment] = useState("");
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -42,7 +43,7 @@ const Preguntas = () => {
       try {
         const response = await questionService.getAllQuestions();
         const userQuestions = response.data.data.filter(
-          (question) => question.userId === userId && question.status === "pending"
+          (question) => question.userId === userId && question.status === "pendiente"
         );
         setPendingQuestions(userQuestions);
         if (userQuestions.length === 0) {
@@ -139,6 +140,10 @@ const Preguntas = () => {
       }
     }
     return <div className="stars">{stars}</div>;
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setImagePreview(imageUrl);
   };
 
   // Ejemplos de preguntas respondidas
@@ -261,6 +266,12 @@ const Preguntas = () => {
               <Label for="questionBody"><strong>Pregunta:</strong></Label>
               <Input type="textarea" name="questionBody" id="questionBody" value={selectedQuestion.body} readOnly style={{ height: "150px" }} />
             </FormGroup>
+            {selectedQuestion.imageUrl && (
+              <FormGroup>
+                <Label for="questionImage"><strong>Imagen:</strong></Label>
+                <Button color="link" onClick={() => handleImageClick(selectedQuestion.imageUrl)}>Ver imagen</Button>
+              </FormGroup>
+            )}
             <CardText><strong>Precio:</strong> {selectedQuestion.price} Askoins</CardText>
             <CardText><strong>Tema relacionado:</strong> {getTopicName(selectedQuestion.topicId)}</CardText>
             <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
@@ -276,6 +287,20 @@ const Preguntas = () => {
           </ModalBody>
           <ModalFooter className="custom-modal-footer">
             <Button color="secondary" onClick={handleCloseModal}>Cerrar</Button>
+          </ModalFooter>
+        </Modal>
+      )}
+
+      {imagePreview && (
+        <Modal isOpen={true} className="custom-modal" style={{ maxWidth: "800px" }} backdrop="static" keyboard={false}>
+          <ModalHeader className="custom-modal-header">
+            Previsualización de la imagen
+          </ModalHeader>
+          <ModalBody className="custom-modal-body">
+            <img src={imagePreview} alt="Previsualización" style={{ width: "100%", height: "auto" }} />
+          </ModalBody>
+          <ModalFooter className="custom-modal-footer">
+            <Button color="secondary" onClick={() => setImagePreview(null)}>Cerrar</Button>
           </ModalFooter>
         </Modal>
       )}
