@@ -174,7 +174,11 @@ const { isAuthenticated } = useAuth0();
         <h4 class="text-lg font-semibold mb-4">Aprende en tu teléfono, tablet y laptop.</h4>
         <a href="#" class="bg-white text-black px-4 py-2 rounded-lg">Empieza ahora</a>
     </div>
-    <img src="https://res.cloudinary.com/ao73ir9fa/image/upload/v1740930312/screens/Responsive_-_Asky_tcb4a9.png" alt="Devices" class="mt-4 w-full max-w-xs mx-auto md:mt-0"/>
+    <div class="md:flex-1 flex justify-end">
+        <img src="https://res.cloudinary.com/ao73ir9fa/image/upload/v1740930312/screens/Responsive_-_Asky_tcb4a9.png" 
+             alt="Devices" 
+             class="w-full max-w-lg md:max-w-md lg:max-w-lg border border-[#B0BEC5] rounded-lg shadow-lg" />
+    </div>
 </div>
 
 </div>
