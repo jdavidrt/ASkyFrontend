@@ -17,8 +17,8 @@ const AboutUs = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="about-logo-container">
-                <img src={logo} alt="ASKy Logo" className="about-logo" />
+              <div className="about-logo-container flex justify-center">
+                <img src={logo} alt="ASKy Logo" className="w-80 " />
               </div>
               <h2 className="section-title">Sobre Nosotros</h2>
               <p className="about-us-text">

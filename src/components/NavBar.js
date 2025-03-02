@@ -95,7 +95,7 @@ const NavBar = () => {
       <Navbar color="light" light expand="md" container={false}>
         <Container>
           <NavbarBrand onClick={handleLogoClick} style={{ cursor: "pointer" }}>
-            <img src={logo} alt="ASKY Logo" width="50" />
+            <img src={logo} alt="ASKY Logo" width="80" />
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
