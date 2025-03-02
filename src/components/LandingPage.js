@@ -45,7 +45,13 @@ const LandingPage = () => {
             { icon: faCommentDots, title: "Consultas rápidas", description: "Haz preguntas y recibe respuestas en tiempo récord." },
             { icon: faMoneyBill, title: "Transacciones seguras", description: "Usa ASKoins para pagar de manera fácil y transparente." }].map((feature, index) => (
               <Col md="4" key={index}>
-                <motion.div className="feature-card" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <motion.div 
+                className="feature-card" 
+                style={{
+                  boxShadow: "#48AFDE -5px 5px 25px 0px"
+                }}
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}>
                   <FontAwesomeIcon icon={feature.icon} size="3x" className="feature-icon" />
                   <h5>{feature.title}</h5>
                   <p>{feature.description}</p>

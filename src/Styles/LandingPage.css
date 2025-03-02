@@ -43,6 +43,8 @@
   border: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  min-height: 2rem; /* Ajuste mínimo para mantener el tamaño uniforme */
+  height: 100%; /* Se expande para mantener la altura de la más grande */
   border-radius: 15px;
 }
 
