@@ -137,6 +137,7 @@
   border-radius: 50%;
   font-size: 1.5rem;
   font-weight: bold;
+  flex-shrink: 0; /* Asegurar que el tamaño no se reduzca */
 }
 
 .step-details h4 {

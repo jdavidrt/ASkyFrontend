@@ -28,7 +28,7 @@ const Header = () => {
                     trigger: containerRef.current,
                     start: "top top",
                     end: "bottom top",
-                    scrub: 1,
+                    scrub: 5, // Hacer la animación más lenta
                     pin: true,
                 },
             });
