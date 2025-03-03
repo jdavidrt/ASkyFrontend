@@ -5,6 +5,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import questionService from "../services/QuestionService";
 import topicService from "../services/TopicService";
 import userService from "../services/UserService";
+import answerService from "../services/AnswerService"; // Importar el servicio de respuestas
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import "../Styles/Preguntas.css";
@@ -59,6 +60,47 @@ const Preguntas = () => {
     }
   }, [isAuthenticated, userId]);
 
+  const fetchExpertName = useCallback(async (expertId) => {
+    try {
+      const response = await userService.getUserById(expertId);
+      return `${response.data.data.firstName} ${response.data.data.lastName}`;
+    } catch (error) {
+      console.error("Error fetching expert name:", error);
+      return "Desconocido";
+    }
+  }, []);
+
+  const fetchAnsweredQuestions = useCallback(async () => {
+    if (isAuthenticated && userId) {
+      try {
+        const response = await questionService.getAllQuestions();
+        const userQuestions = response.data.data.filter(
+          (question) => question.userId === userId && (question.status === "aceptado" || question.status === "rechazado")
+        );
+
+        const questionsWithExpertNames = await Promise.all(userQuestions.map(async (question) => {
+          const expertName = await fetchExpertName(question.expertId);
+          return { ...question, expertName };
+        }));
+
+        setAnsweredQuestions(questionsWithExpertNames);
+      } catch (error) {
+        console.error("Error fetching answered questions:", error);
+      }
+    }
+  }, [isAuthenticated, userId, fetchExpertName]);
+
+  const fetchAnswerByQuestionId = useCallback(async (questionId) => {
+    try {
+      const response = await answerService.getAllAnswers();
+      const answer = response.data.data.find(answer => answer.questionId === questionId);
+      return answer ? answer.body : null;
+    } catch (error) {
+      console.error("Error fetching answer by question ID:", error);
+      return null;
+    }
+  }, []);
+
   useEffect(() => {
     fetchUserId();
   }, [fetchUserId]);
@@ -75,6 +117,12 @@ const Preguntas = () => {
     }
   }, [userId, fetchPendingQuestions]);
 
+  useEffect(() => {
+    if (userId) {
+      fetchAnsweredQuestions();
+    }
+  }, [userId, fetchAnsweredQuestions]);
+
   const fetchTopics = async () => {
     try {
       const response = await topicService.getTopics();
@@ -89,14 +137,16 @@ const Preguntas = () => {
     return topic ? topic.name : "Desconocido";
   };
 
-  const toggleModal = (question) => {
+  const toggleModal = async (question) => {
     setSelectedQuestion(question);
-    setModal(!modal);
     if (!modal) {
-      sessionStorage.setItem('selectedQuestion', JSON.stringify(question));
+      const answer = await fetchAnswerByQuestionId(question.id);
+      setSelectedQuestion(prevState => ({ ...prevState, answer }));
+      sessionStorage.setItem('selectedQuestion', JSON.stringify({ ...question, answer }));
     } else {
       sessionStorage.removeItem('selectedQuestion');
     }
+    setModal(!modal);
   };
 
   const toggleRatingModal = () => {
@@ -106,7 +156,7 @@ const Preguntas = () => {
   const handleCloseModal = () => {
     setModal(false);
     sessionStorage.removeItem('selectedQuestion');
-    if (activeTab === '2' && !selectedQuestion.rating) {
+    if (activeTab === '2' && selectedQuestion.status === 'aceptado' && !selectedQuestion.rating) {
       toggleRatingModal();
     }
   };
@@ -247,6 +297,7 @@ const Preguntas = () => {
                   <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
                   <p><strong>Plazo de tiempo:</strong> {new Date(question.deadline).toLocaleString()}</p>
                   <p><strong>Respondido por:</strong> {question.expertName}</p>
+                  <p><strong>Estatus:</strong> {question.status}</p>
                   {question.rating > 0 && (
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <p><strong>Tu calificación:</strong></p>
@@ -256,7 +307,7 @@ const Preguntas = () => {
                 </div>
                 <div className="button-group">
                   <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
-                    Ver Respuesta
+                    {question.status === 'rechazado' ? 'Ver justificación' : 'Ver respuesta'}
                   </Button>
                 </div>
               </div>
@@ -285,7 +336,7 @@ const Preguntas = () => {
             <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
             {selectedQuestion.answer && (
               <FormGroup>
-                <Label for="answerBody"><strong>Respuesta:</strong></Label>
+                <Label for="answerBody"><strong>{selectedQuestion.status === 'rechazado' ? 'Justificación' : 'Respuesta'}:</strong></Label>
                 <Input type="textarea" name="answerBody" id="answerBody" value={selectedQuestion.answer} readOnly style={{ height: "150px" }} />
               </FormGroup>
             )}
@@ -313,7 +364,7 @@ const Preguntas = () => {
         </Modal>
       )}
 
-      {selectedQuestion && activeTab === '2' && !selectedQuestion.rating && (
+      {selectedQuestion && activeTab === '2' && selectedQuestion.status === 'aceptado' && !selectedQuestion.rating && (
         <Modal isOpen={ratingModal} className="custom-modal" style={{ maxWidth: "600px" }} backdrop="static" keyboard={false}>
           <ModalHeader className="custom-modal-header">
             Calificar respuesta de {selectedQuestion && `(${selectedQuestion.expertName})`}
