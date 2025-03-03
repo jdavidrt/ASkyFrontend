@@ -6,6 +6,7 @@ import questionService from "../services/QuestionService";
 import topicService from "../services/TopicService";
 import userService from "../services/UserService";
 import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "../components/Loading";
 import "../Styles/Preguntas.css";
 
 const Preguntas = () => {
@@ -21,6 +22,7 @@ const Preguntas = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [userId, setUserId] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
+  const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -49,8 +51,10 @@ const Preguntas = () => {
         if (userQuestions.length === 0) {
           console.log("El usuario no tiene preguntas pendientes.");
         }
+        setLoading(false); // Desactivar la pantalla de carga
       } catch (error) {
         console.error("Error fetching pending questions:", error);
+        setLoading(false); // Desactivar la pantalla de carga en caso de error
       }
     }
   }, [isAuthenticated, userId]);
@@ -184,6 +188,10 @@ const Preguntas = () => {
       }
     ]);
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Container className="preguntas-container">

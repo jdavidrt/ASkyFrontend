@@ -31,6 +31,7 @@ export const ProfileComponent = () => {
   const [termsModal, setTermsModal] = useState(false); // Estado para la ventana emergente de TermsAndConditions
   const [confirmPasswordModal, setConfirmPasswordModal] = useState(false); // Estado para la ventana emergente de confirmación de cambio de contraseña
   const [showExpertNotice, setShowExpertNotice] = useState(false); // Estado para mostrar el aviso de experto
+  const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
 
   const handleResetPassword = async () => {
     try {
@@ -76,8 +77,10 @@ export const ProfileComponent = () => {
         setASKYuser(response2.data.data);
         setIsConsultant(response2.data.data.isConsultant);
       }
+      setLoading(false); // Desactivar la pantalla de carga
     } catch (error) {
       console.error("Error fetching users:", error);
+      setLoading(false); // Desactivar la pantalla de carga en caso de error
     }
   };
 
@@ -193,6 +196,10 @@ export const ProfileComponent = () => {
     fetchSubjects();
     fetchUsers();
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Container className="mb-5 profile-container">

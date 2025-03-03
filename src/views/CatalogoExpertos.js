@@ -34,6 +34,7 @@ const CatalogoExpertos = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [askoinCount, setAskoinCount] = useState(0); // Estado para la cantidad de ASKoins
+  const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
 
   const sortOptions = [
     { value: "", label: "Ninguno" },
@@ -112,8 +113,10 @@ const CatalogoExpertos = () => {
         sortedExperts = sortedExperts.sort((a, b) => b.responseRate - a.responseRate);
       }
       setExperts(sortedExperts);
+      setLoading(false); // Desactivar la pantalla de carga
     } catch (error) {
       console.error("Error fetching experts:", error);
+      setLoading(false); // Desactivar la pantalla de carga en caso de error
     }
   }, [filters]);
 
@@ -250,6 +253,10 @@ const CatalogoExpertos = () => {
     const user = users.find(u => u.id === expertId);
     return user ? user.profileImageUrl : null;
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Container className="catalogo-expertos-container">

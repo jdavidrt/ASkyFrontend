@@ -17,6 +17,7 @@ const Header = () => {
     const containerRef = useRef(null);
     const gridRef = useRef(null);
     const leftSectionRef = useRef(null);
+    const textRef = useRef(null);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
@@ -41,6 +42,20 @@ const Header = () => {
                 pin: leftSectionRef.current,
                 pinSpacing: false,
             });
+
+            // Unified Scroll Effect for Small Screens
+            if (window.innerWidth < 768) {
+                gsap.to([textRef.current, gridRef.current], {
+                    yPercent: -100,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: 5,
+                    },
+                });
+            }
         });
 
         return () => ctx.revert();
@@ -56,7 +71,7 @@ const Header = () => {
                 <div className="relative flex flex-col md:flex-row w-full">
                     {/* Left Section - Stays Fixed Until Grid Scroll Ends */}
                     <div ref={leftSectionRef} className="w-full md:w-1/3 h-screen flex items-center justify-center bg-transparent">
-                        <div className="p-10 text-center md:text-left">
+                        <div className="p-10 text-center md:text-left" ref={textRef}>
                             <h1 className="text-4xl md:text-5xl font-bold text-[#223740]">
                                 La plataforma para hacer el aprendizaje {" "}
                                 <span className="text-[#48AFDE]">fácil.</span>
