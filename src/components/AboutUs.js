@@ -107,7 +107,7 @@ const AboutUs = () => {
             { name: "Néstor", title: "Desarrollador Frontend", img: "Néstor.jpg" },
             { name: "Juan David", title: "Desarrollador Frontend", img: "JuanDavid.jpg" },
             { name: "Juan Sebastián", title: "Desarrollador Backend", img: "JuanSebastián.jpg" },
-            { name: "Andrés", title: "Desarrollador Backend", img: "Andrés.jpg" },
+            { name: "Andrés", title: "Desarrollador Full Stack", img: "Andrés.jpg" },
           ].map((dev, index) => (
             <Col md="3" sm="6" key={index} className="talent-card-container">
               <motion.div
