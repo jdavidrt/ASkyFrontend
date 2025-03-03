@@ -1,4 +1,11 @@
-
-  .navbar .nav-link-custom.router-link-exact-active {
+.navbar .nav-link-custom.router-link-exact-active {
     border-bottom: 3px solid #0891B2 !important; /* Código hexadecimal para cian */
-  }
+}
+
+.nav-user-profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1; /* Asegurar que la imagen siempre sea un círculo */
+}

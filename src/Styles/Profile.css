@@ -14,6 +14,24 @@
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    flex-wrap: nowrap; /* Mantener los elementos en una sola línea */
+  }
+
+  .profile-picture-container input {
+    flex: 1 1 auto; /* Permitir que el input ocupe el espacio disponible */
+    min-width: 200px; /* Asegurar un tamaño mínimo para el input */
+    margin-left: 15px; /* Añadir un margen izquierdo para separar la imagen del input */
+  }
+
+  @media (max-width: 576px) {
+    .profile-picture-container {
+      flex-wrap: wrap; /* Permitir que los elementos se envuelvan en pantallas pequeñas */
+    }
+  
+    .profile-picture-container input {
+      margin-left: 0; /* Quitar el margen izquierdo en pantallas pequeñas */
+      margin-top: 10px; /* Añadir un margen superior para separar la imagen del input en pantallas pequeñas */
+    }
   }
 
   .profile-picture {
@@ -22,6 +40,8 @@
     border-radius: 50%;
     object-fit: cover;
     margin-right: 15px;
+    /* Asegurar que la imagen siempre sea un círculo */
+    aspect-ratio: 1 / 1;
   }
   
   .profile-form {

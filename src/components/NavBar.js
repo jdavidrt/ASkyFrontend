@@ -88,6 +88,10 @@ const NavBar = () => {
     }
   };
 
+  const handleNavLinkClick = () => {
+    setIsOpen(false); // Contraer el navbar
+  };
+
   console.log("Default Pic", profileImageUrl)
 
   return (
@@ -109,6 +113,7 @@ const NavBar = () => {
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       Catálogo de expertos
                     </NavLink>
@@ -120,6 +125,7 @@ const NavBar = () => {
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       Mis Consultas
                     </NavLink>
@@ -132,6 +138,7 @@ const NavBar = () => {
                         exact
                         activeClassName="router-link-exact-active"
                         className="nav-link-custom"
+                        onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                       >
                         Responder consultas
                       </NavLink>
@@ -151,6 +158,7 @@ const NavBar = () => {
                         fontWeight: "bold",
                         fontSize: "1rem", // Ajustar tamaño de fuente
                       }}
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       <FontAwesomeIcon icon={faCoins} style={{ marginRight: "0.5rem" }} />
                       ASKoins <span style={{ marginLeft: "0.5rem", backgroundColor: "#0891B2", color: "white", borderRadius: "0.5rem", padding: "0.2rem 0.5rem" }}>{askoinCount}</span>
@@ -166,6 +174,7 @@ const NavBar = () => {
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       Inicio
                     </NavLink>
@@ -177,6 +186,7 @@ const NavBar = () => {
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       FAQ
                     </NavLink>
@@ -188,6 +198,7 @@ const NavBar = () => {
                       exact
                       activeClassName="router-link-exact-active"
                       className="nav-link-custom"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       Sobre Nosotros
                     </NavLink>
@@ -223,8 +234,7 @@ const NavBar = () => {
                         <DropdownItem header>Notificaciones</DropdownItem>
                         <DropdownItem>Opción 1</DropdownItem>
                         <DropdownItem>Opción 2</DropdownItem>
-                        <DropdownItem>Opción 3</DropdownItem>
-                      </DropdownMenu>
+                        <DropdownItem>Opción 3</DropdownMenu>
                     </Dropdown>
                   </NavItem> */}
                 </>
@@ -259,12 +269,16 @@ const NavBar = () => {
                       to="/profile"
                       className="dropdown-profile"
                       activeClassName="router-link-exact-active"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                     >
                       <FontAwesomeIcon icon="user" className="mr-3" /> Perfil
                     </DropdownItem>
                     <DropdownItem
                       id="qsLogoutBtn"
-                      onClick={() => logoutWithRedirect()}
+                      onClick={() => {
+                        handleNavLinkClick(); // Contraer el navbar al hacer clic
+                        logoutWithRedirect();
+                      }}
                     >
                       <FontAwesomeIcon icon="power-off" className="mr-3" /> Cerrar Sesión
                     </DropdownItem>
@@ -294,12 +308,12 @@ const NavBar = () => {
               >
                 <NavItem>
                   <span className="user-info">
-                    {user.picture ? <img
-                      src={user.picture}
+                    <img
+                      src={profileImageUrl ? profileImageUrl : ExpertoProfile} // Usar la imagen de perfil del estado
                       alt="Profile"
                       className="nav-user-profile d-inline-block rounded-circle mr-3"
                       width="50"
-                    /> : ""}
+                    />
                     <h6 className="d-inline-block">{user.name}</h6>
                   </span>
                 </NavItem>
@@ -308,6 +322,7 @@ const NavBar = () => {
                   <RouterNavLink
                     to="/profile"
                     activeClassName="router-link-exact-active"
+                    onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
                   >
                     Perfil
                   </RouterNavLink>
@@ -317,7 +332,10 @@ const NavBar = () => {
                   <RouterNavLink
                     to="#"
                     id="qsLogoutBtn"
-                    onClick={() => logoutWithRedirect()}
+                    onClick={() => {
+                      handleNavLinkClick(); // Contraer el navbar al hacer clic
+                      logoutWithRedirect();
+                    }}
                   >
                     Cerrar Sesión
                   </RouterNavLink>

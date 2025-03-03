@@ -234,6 +234,7 @@ export const ProfileComponent = () => {
                   id="profileImage"
                   name="profileImage"
                   className="form-control ml-3"
+                  accept="image/*" // Limitar a solo formatos de imagen
                   onChange={handleFileChange} // Manejar el cambio de archivo
                 />
               </div>
