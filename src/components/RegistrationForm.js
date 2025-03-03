@@ -135,6 +135,11 @@ const RegistrationForm = ({ user, toggleModal, setModalOpen }) => {
     setTooltipOpen(!tooltipOpen);
   };
 
+  const handleModalClose = () => {
+    setPrivacyPolicyModal(false);
+    setTermsModal(false);
+  };
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -290,16 +295,22 @@ const RegistrationForm = ({ user, toggleModal, setModalOpen }) => {
         </Button>
       </Form>
       <Modal isOpen={privacyPolicyModal} toggle={togglePrivacyPolicyModal} size="lg" backdrop="static">
-        <ModalHeader toggle={togglePrivacyPolicyModal}>Política de Privacidad</ModalHeader>
+        <ModalHeader toggle={handleModalClose}>Política de Privacidad</ModalHeader>
         <ModalBody>
           <PrivacyPolicy />
         </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={handleModalClose}>Cerrar</Button>
+        </ModalFooter>
       </Modal>
       <Modal isOpen={termsModal} toggle={toggleTermsModal} size="lg" backdrop="static">
-        <ModalHeader toggle={toggleTermsModal}>Términos y Condiciones</ModalHeader>
+        <ModalHeader toggle={handleModalClose}>Términos y Condiciones</ModalHeader>
         <ModalBody>
           <TermsAndConditions />
         </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={handleModalClose}>Cerrar</Button>
+        </ModalFooter>
       </Modal>
     </>
   );
