@@ -103,6 +103,7 @@
   cursor: pointer;
   position: relative;
   transition: background 0.3s ease-in-out;
+  margin: 6px;
 }
 
 /* Estilos cuando está en modo oscuro */
