@@ -25,6 +25,7 @@ const Preguntas = () => {
   const [userId, setUserId] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
   const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
+  const [loadingAnsweredQuestions, setLoadingAnsweredQuestions] = useState(true); // Estado para la pantalla de carga de consultas respondidas
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -95,9 +96,11 @@ const Preguntas = () => {
           return { ...question, expertName, rating };
         }));
 
-        setAnsweredQuestions(questionsWithDetails);
+        setAnsweredQuestions(questionsWithDetails.reverse()); // Invertir el orden de las preguntas respondidas
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga
       } catch (error) {
         console.error("Error fetching answered questions:", error);
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga en caso de error
       }
     }
   }, [isAuthenticated, userId, fetchExpertName]);
@@ -308,32 +311,38 @@ const Preguntas = () => {
           </div>
         </TabPane>
         <TabPane tabId="2">
-          <h2>Consultas respondidas</h2>
-          <p>Aquí podrás encontrar todas las preguntas que has realizado y que ya fueron respondidas por los expertos.</p>
-          <div className="question-list">
-            {answeredQuestions.map((question) => (
-              <div key={question.id} className="question-item">
-                <div className="question-details">
-                  <h5>{question.title}</h5>
-                  <p><strong>Precio:</strong> {question.price} Askoins</p>
-                  <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
-                  <p><strong>Respondido por:</strong> {question.expertName}</p>
-                  <p><strong>Estatus:</strong> {question.status}</p>
-                  {question.rating > 0 && (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <p><strong>Tu calificación:</strong></p>
-                      <div style={{ marginLeft: "10px" }}>{renderStars(question.rating)}</div>
+          {loadingAnsweredQuestions ? (
+            <Loading />
+          ) : (
+            <>
+              <h2>Consultas respondidas</h2>
+              <p>Aquí podrás encontrar todas las preguntas que has realizado y que ya fueron respondidas por los expertos.</p>
+              <div className="question-list">
+                {answeredQuestions.map((question) => (
+                  <div key={question.id} className="question-item">
+                    <div className="question-details">
+                      <h5>{question.title}</h5>
+                      <p><strong>Precio:</strong> {question.price} Askoins</p>
+                      <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
+                      <p><strong>Respondido por:</strong> {question.expertName}</p>
+                      <p><strong>Estatus:</strong> {question.status}</p>
+                      {question.rating > 0 && (
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <p><strong>Tu calificación:</strong></p>
+                          <div style={{ marginLeft: "10px" }}>{renderStars(question.rating)}</div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="button-group">
-                  <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
-                    {question.status === 'rechazado' ? 'Ver justificación' : 'Ver respuesta'}
-                  </Button>
-                </div>
+                    <div className="button-group">
+                      <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
+                        {question.status === 'rechazado' ? 'Ver justificación' : 'Ver respuesta'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </TabPane>
       </TabContent>
 

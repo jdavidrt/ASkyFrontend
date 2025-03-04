@@ -26,6 +26,7 @@ const ResponderPreguntas = () => {
   const [answers, setAnswers] = useState([]); // Estado para las respuestas
   const [alertVisible, setAlertVisible] = useState(false); // Estado para controlar la visibilidad de la alerta
   const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
+  const [loadingAnsweredQuestions, setLoadingAnsweredQuestions] = useState(true); // Estado para la pantalla de carga de consultas respondidas
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -99,8 +100,10 @@ const ResponderPreguntas = () => {
         questionsWithDetails.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         setAnsweredQuestions(questionsWithDetails);
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga de consultas respondidas
       } catch (error) {
         console.error("Error fetching answered questions:", error);
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga en caso de error
       }
     }
   }, [isAuthenticated, expertId]);
@@ -181,12 +184,6 @@ const ResponderPreguntas = () => {
     setJustification(e.target.value);
   };
 
-  const handleSendJustification = () => {
-    // Lógica para enviar la justificación
-    setJustification("");
-    setRejectModal(false);
-  };
-
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -254,6 +251,10 @@ const ResponderPreguntas = () => {
   };
 
   if (loading) {
+    return <Loading />;
+  }
+
+  if (loadingAnsweredQuestions && activeTab === '2') {
     return <Loading />;
   }
 
