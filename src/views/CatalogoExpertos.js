@@ -311,7 +311,7 @@ const CatalogoExpertos = () => {
               <div className="expert-card-content">
                 <h3>{`${expert.firstName} ${expert.lastName}`}</h3>
                 <p>{expert.biography}</p>
-                <p>Calificación: <span style={{ fontSize: "13px" }}>{expert.averageRating}</span> {renderStars(expert.averageRating)}</p>
+                <p>Calificación: <span style={{ fontSize: "13px" }}>{expert.averageRating.toFixed(1)}</span> {renderStars(expert.averageRating)}</p>
                 <p>Tarifa: {expert.basePrice} Askoins.</p>
                 <p className="response-rate"><strong><em>Responde el {expert.responseRate}% de las veces.</em></strong></p>
               </div>
