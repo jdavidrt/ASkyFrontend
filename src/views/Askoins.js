@@ -3,7 +3,8 @@ import { Container, Row, Col, Button, Card, CardBody, CardTitle, CardText, Modal
 import { useAuth0 } from "@auth0/auth0-react";
 import userService from "../services/UserService";
 import "../Styles/Askoins.css"; // Usar estilos propios
-
+import { faWallet, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Askoins = () => {
   const { user, isAuthenticated } = useAuth0();
   const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
@@ -97,93 +98,192 @@ const Askoins = () => {
     <Container className="askoins-container mt-5">
       <Row>
         <Col>
-          <h1 className="askoins-title">ASKoins</h1> {/* Aplicar la clase CSS */}
-          <p>Tu saldo actual de ASKoins es: <strong>{askoinCount}</strong></p>
+          <h1 className="askoins-title">ASKoins</h1>
+        </Col>
+        <Col>
+          <p className="askoins-subtitle">Tu saldo actual de ASKoins es: <strong>{askoinCount}</strong></p>
         </Col>
       </Row>
       <Row>
         <Col md="6">
-          <Card className="askoins-item mb-4 h-100"> {/* Asegurar que las tarjetas tengan el mismo tamaño */}
-            <CardBody>
-              <CardTitle tag="h5">Recargar ASKoins</CardTitle>
-              <CardText>Recarga tu saldo de ASKoins para poder realizar más consultas.</CardText>
-              <Button color="primary" className="view-more-button" onClick={toggleRechargeModal}>Recargar ASKoins</Button>
+          <Card className="askoins-item mb-4 h-100">
+            <CardBody className="d-flex flex-column align-items-center text-center">
+              <Button color="primary" className="view-more-button text-center" onClick={toggleRechargeModal}>
+                Recargar ASKoins <FontAwesomeIcon icon={faWallet} style={{ marginRight: "0.5rem" }} />
+              </Button>
+              <CardText className="note-text">
+                💡 Recarga tu saldo de ASKoins para poder realizar más consultas.
+              </CardText>
             </CardBody>
           </Card>
         </Col>
+
         {isConsultant && (
           <Col md="6">
-            <Card className="askoins-item mb-4 h-100"> {/* Asegurar que las tarjetas tengan el mismo tamaño */}
-              <CardBody>
-                <CardTitle tag="h5">Retirar ASKoins</CardTitle>
-                <CardText>Retira tus ASKoins acumulados a tu cuenta de Paypal.</CardText>
-                <Button color="secondary" className="view-more-button view-more-button-secondary" onClick={toggleWithdrawModal}>Retirar ASKoins</Button>
+            <Card className="askoins-item mb-4 h-100">
+              <CardBody className="d-flex flex-column align-items-center text-center">
+                <Button color="secondary" className="view-more-button text-center" onClick={toggleWithdrawModal}>
+                  Retirar ASKoins <FontAwesomeIcon icon={faMoneyBillWave} style={{ marginRight: "0.5rem" }} />
+                </Button>
+                <CardText className="note-text">
+                  💸 Retira tus ASKoins acumulados a tu cuenta de PayPal.
+                </CardText>
               </CardBody>
             </Card>
           </Col>
+
         )}
       </Row>
 
       <Modal isOpen={rechargeModal} toggle={toggleRechargeModal}>
-        <ModalHeader toggle={toggleRechargeModal}>Recargar ASKoins</ModalHeader>
+        <ModalHeader
+          toggle={toggleRechargeModal}
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            backgroundColor: "#0891b2",
+            color: "white",
+            textAlign: "center",
+            padding: "15px",
+            borderRadius: "8px 8px 0 0",
+          }}
+        >
+          Recargar ASKoins
+        </ModalHeader>
         <ModalBody>
           <FormGroup>
-            <Label for="rechargeAmount">Monto de recarga (ASKoins)</Label>
+            <Label for="rechargeAmount" style={{ fontSize: "1.2rem", fontWeight: "600" }}>
+              Monto de recarga (<i>ASKoins</i>)
+            </Label>
             <Input
               type="number"
               name="rechargeAmount"
               id="rechargeAmount"
               value={rechargeAmount}
               onChange={handleRechargeAmountChange}
-              placeholder="Ingresa el monto de ASKoins a recargar"
+              placeholder="Ingresa el monto a recargar"
+              style={{ fontSize: "1.1rem", padding: "10px", borderRadius: "5px" }}
             />
           </FormGroup>
+
           {rechargeAmount && (
             <div className="recharge-summary">
-              <>
-                <p>Equivalente en pesos colombianos: <strong>{convertedAmount}</strong> COP</p>
-                <p>Comisión (10%): <strong>{convertedAmount * 0.10}</strong> COP</p>
-                <p>Total a pagar: <strong>{totalToPay}</strong> COP</p>
-              </>
+              <h5 style={{ fontWeight: "bold", textAlign: "center", marginBottom: "10px" }}>Resumen de Recarga</h5>
+              <p>
+                <strong>Equivalente en pesos colombianos:</strong>
+                <span style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#0891b2" }}> ${convertedAmount} COP</span>
+              </p>
+              <p>
+                <strong>Comisión (10%):</strong>
+                <span style={{ fontStyle: "italic", fontWeight: "bold", color: "#A2A2A2" }}> ${convertedAmount * 0.10} COP</span>
+              </p>
+              <p style={{ fontSize: "1.2rem", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>
+                Total a pagar: <span style={{ color: "#d97706" }}>${totalToPay} COP</span>
+              </p>
             </div>
           )}
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2" }} onClick={handleRecharge}>Recargar</Button>
-          <Button color="secondary" onClick={toggleRechargeModal}>Cancelar</Button>
+          <Button
+            color="primary"
+            style={{
+              backgroundColor: "#0891b2",
+              borderColor: "#0891b2",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              borderRadius: "5px",
+            }}
+            onClick={handleRecharge}
+          >
+            Recargar
+          </Button>
+          <Button color="secondary" onClick={toggleRechargeModal} style={{ fontSize: "1.1rem", padding: "10px 20px" }}>
+            Cancelar
+          </Button>
         </ModalFooter>
       </Modal>
 
+
       <Modal isOpen={withdrawModal} toggle={toggleWithdrawModal}>
-        <ModalHeader toggle={toggleWithdrawModal}>Retirar ASKoins</ModalHeader>
+        <ModalHeader
+          toggle={toggleWithdrawModal}
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            backgroundColor: "#148E61",
+            color: "white",
+            textAlign: "center",
+            padding: "15px",
+            borderRadius: "8px 8px 0 0",
+          }}
+        >
+          Retirar ASKoins
+        </ModalHeader>
         <ModalBody>
           <FormGroup>
-            <Label for="withdrawAmount">Monto de retiro (ASKoins)</Label>
+            <Label for="withdrawAmount" style={{ fontSize: "1.2rem", fontWeight: "600" }}>
+              Monto de retiro (<i>ASKoins</i>)
+            </Label>
             <Input
               type="number"
               name="withdrawAmount"
               id="withdrawAmount"
               value={withdrawAmount}
               onChange={handleWithdrawAmountChange}
-              placeholder="Ingresa el monto de ASKoins a retirar"
+              placeholder="Ingresa el monto a retirar"
+              style={{ fontSize: "1.1rem", padding: "10px", borderRadius: "5px" }}
             />
           </FormGroup>
+
           {withdrawAmount && (
-            <div className="recharge-summary">
-              <p>Equivalente en pesos colombianos: <strong>{convertedAmount}</strong> COP</p>
-              <p>Total a retirar: <strong>{convertedAmount}</strong> COP</p>
-              <Progress value={getProgressValue()} color={withdrawAmount >= 40 ? "success" : "warning"}>
-                {withdrawAmount >= 40 ? "Cantidad mínima alcanzada" : `${withdrawAmount} / 40 ASKoins`}
+            <div className="withdraw-summary">
+              <h5 style={{ fontWeight: "bold", textAlign: "center", marginBottom: "10px" }}>Resumen de Retiro</h5>
+              <p>
+                <strong>Equivalente en pesos colombianos:</strong>
+                <span style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#0891b2" }}> ${convertedAmount} COP</span>
+              </p>
+              <p style={{ fontSize: "1.2rem", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>
+                Total a retirar: <span style={{ color: "#1c64f2" }}>${convertedAmount} COP</span>
+              </p>
+
+              <Progress
+                value={getProgressValue()}
+                color={withdrawAmount >= 40 ? "success" : "warning"}
+                style={{ height: "25px", borderRadius: "8px", marginTop: "10px" }}
+              >
+                <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                  {withdrawAmount >= 40 ? "Cantidad mínima alcanzada" : `${withdrawAmount} / 40 ASKoins`}
+                </span>
               </Progress>
             </div>
           )}
+
           {withdrawError && (
-            <p style={{ color: "red" }}>{withdrawError}</p>
+            <p style={{ color: "red", fontSize: "1rem", textAlign: "center", marginTop: "10px" }}>
+              ⚠️ {withdrawError}
+            </p>
           )}
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" style={{ backgroundColor: "#0891b2", borderColor: "#0891b2" }} onClick={handleWithdraw}>Retirar</Button>
-          <Button color="secondary" onClick={toggleWithdrawModal}>Cancelar</Button>
+          <Button
+            color="primary"
+            style={{
+              backgroundColor: "#148E61",
+              borderColor: "#148E61",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              borderRadius: "5px",
+            }}
+            disabled={withdrawAmount >= 40 ? false : true}
+            onClick={handleWithdraw}
+          >
+            Retirar
+          </Button>
+          <Button color="secondary" onClick={toggleWithdrawModal} style={{ fontSize: "1.1rem", padding: "10px 20px" }}>
+            Cancelar
+          </Button>
         </ModalFooter>
       </Modal>
     </Container>
