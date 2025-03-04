@@ -16,12 +16,12 @@ class PaymentsService {
     }
     //payments/recharge
     rechargePayments() {
-        return axios.get(`${EXPERT_BASE_RES_API_URL}/withdraw`, {
+        return axios.get(`${EXPERT_BASE_RES_API_URL}/recharge`, {
         });
     }
     //payments/expert
     expertPayout() {
-        return axios.get(`${EXPERT_BASE_RES_API_URL}/withdraw`, {
+        return axios.get(`${EXPERT_BASE_RES_API_URL}/expert/payout`, {
         });
     }
 
