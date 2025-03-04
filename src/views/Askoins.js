@@ -145,7 +145,6 @@ const Askoins = () => {
             color: "white",
             textAlign: "center",
             padding: "15px",
-            borderRadius: "8px 8px 0 0",
           }}
         >
           Recargar ASKoins
@@ -214,8 +213,7 @@ const Askoins = () => {
             backgroundColor: "#148E61",
             color: "white",
             textAlign: "center",
-            padding: "15px",
-            borderRadius: "8px 8px 0 0",
+            padding: "15px"
           }}
         >
           Retirar ASKoins
