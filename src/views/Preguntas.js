@@ -46,7 +46,7 @@ const Preguntas = () => {
       try {
         const response = await questionService.getAllQuestions();
         const userQuestions = response.data.data.filter(
-          (question) => question.userId === userId && question.status === "pendiente"
+          (question) => question.userId === userId && question.status === "pendiente" && new Date(question.deadline) > new Date()
         );
         setPendingQuestions(userQuestions);
         if (userQuestions.length === 0) {
@@ -295,7 +295,6 @@ const Preguntas = () => {
                   <h5>{question.title}</h5>
                   <p><strong>Precio:</strong> {question.price} Askoins</p>
                   <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
-                  <p><strong>Plazo de tiempo:</strong> {new Date(question.deadline).toLocaleString()}</p>
                   <p><strong>Respondido por:</strong> {question.expertName}</p>
                   <p><strong>Estatus:</strong> {question.status}</p>
                   {question.rating > 0 && (
@@ -333,7 +332,9 @@ const Preguntas = () => {
             )}
             <CardText><strong>Precio:</strong> {selectedQuestion.price} Askoins</CardText>
             <CardText><strong>Tema relacionado:</strong> {getTopicName(selectedQuestion.topicId)}</CardText>
-            <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
+            {activeTab === '1' && (
+              <CardText><strong>Plazo de tiempo:</strong> {new Date(selectedQuestion.deadline).toLocaleString()}</CardText>
+            )}
             {selectedQuestion.answer && (
               <FormGroup>
                 <Label for="answerBody"><strong>{selectedQuestion.status === 'rechazado' ? 'Justificación' : 'Respuesta'}:</strong></Label>
