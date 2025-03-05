@@ -6,6 +6,7 @@ import questionService from "../services/QuestionService";
 import topicService from "../services/TopicService";
 import userService from "../services/UserService";
 import answerService from "../services/AnswerService"; // Importar el servicio de respuestas
+import RatingsService from "../services/RatingsService"; // Importar el servicio de calificaciones
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import "../Styles/Preguntas.css";
@@ -24,6 +25,7 @@ const Preguntas = () => {
   const [userId, setUserId] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // Estado para la previsualización de la imagen
   const [loading, setLoading] = useState(true); // Estado para la pantalla de carga
+  const [loadingAnsweredQuestions, setLoadingAnsweredQuestions] = useState(true); // Estado para la pantalla de carga de consultas respondidas
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -78,14 +80,27 @@ const Preguntas = () => {
           (question) => question.userId === userId && (question.status === "aceptado" || question.status === "rechazado")
         );
 
-        const questionsWithExpertNames = await Promise.all(userQuestions.map(async (question) => {
+        const questionsWithDetails = await Promise.all(userQuestions.map(async (question) => {
           const expertName = await fetchExpertName(question.expertId);
-          return { ...question, expertName };
+          const answers = await answerService.getAllAnswers();
+          const answer = answers.data.data.find(answer => answer.questionId === question.id);
+          const answerId = answer ? answer.id : null;
+
+          let rating = 0;
+          if (answerId) {
+            const ratings = await RatingsService.getAllRatings();
+            const existingRating = ratings.find(rating => rating.answerId === answerId);
+            rating = existingRating ? existingRating.rating : 0;
+          }
+
+          return { ...question, expertName, rating };
         }));
 
-        setAnsweredQuestions(questionsWithExpertNames);
+        setAnsweredQuestions(questionsWithDetails.reverse()); // Invertir el orden de las preguntas respondidas
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga
       } catch (error) {
         console.error("Error fetching answered questions:", error);
+        setLoadingAnsweredQuestions(false); // Desactivar la pantalla de carga en caso de error
       }
     }
   }, [isAuthenticated, userId, fetchExpertName]);
@@ -153,11 +168,29 @@ const Preguntas = () => {
     setRatingModal(!ratingModal);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     setModal(false);
     sessionStorage.removeItem('selectedQuestion');
     if (activeTab === '2' && selectedQuestion.status === 'aceptado' && !selectedQuestion.rating) {
-      toggleRatingModal();
+      try {
+        const answers = await answerService.getAllAnswers();
+        const answer = answers.data.data.find(answer => answer.questionId === selectedQuestion.id);
+        const answerId = answer ? answer.id : null;
+
+        if (answerId) {
+          const ratingsResponse = await RatingsService.getAllRatings();
+          const ratings = ratingsResponse.data || [];
+          const existingRating = ratings.find(rating => rating.answerId === answerId);
+
+          if (!existingRating) {
+            toggleRatingModal();
+          }
+        } else {
+          toggleRatingModal(); // Mostrar la ventana emergente si no hay respuesta
+        }
+      } catch (error) {
+        console.error("Error checking existing rating:", error);
+      }
     }
   };
 
@@ -169,16 +202,47 @@ const Preguntas = () => {
     setComment(e.target.value);
   };
 
-  const handleSendRating = () => {
+  const handleSendRating = async () => {
     if (selectedQuestion) {
-      const updatedQuestions = answeredQuestions.map(question => 
-        question.id === selectedQuestion.id ? { ...question, rating } : question
-      );
-      setAnsweredQuestions(updatedQuestions);
-      setRating(0);
-      setComment("");
-      toggleRatingModal();
-      setModal(false); // Cerrar la ventana de "Ver respuesta" al enviar la calificación
+      try {
+        const answers = await answerService.getAllAnswers();
+        const answer = answers.data.data.find(answer => answer.questionId === selectedQuestion.id);
+        const answerId = answer ? answer.id : null;
+
+        if (answerId) {
+          const ratingData = {
+            rating,
+            comment,
+            answerId
+          };
+
+          console.log("Sending rating data:", ratingData); // Imprimir en consola
+
+          await RatingsService.createRating(ratingData);
+
+          // Validar si la calificación se creó correctamente
+          const ratings = await RatingsService.getAllRatings();
+          const existingRating = ratings.find(rating => rating.answerId === answerId);
+
+          if (existingRating) {
+            const updatedQuestions = answeredQuestions.map(question => 
+              question.id === selectedQuestion.id ? { ...question, rating: existingRating.rating } : question
+            );
+            setAnsweredQuestions(updatedQuestions);
+          } else {
+            console.error("Rating was not created.");
+          }
+        } else {
+          console.error("No answer found for the selected question.");
+        }
+      } catch (error) {
+        console.error("Error sending rating:", error);
+      } finally {
+        setRating(0);
+        setComment("");
+        toggleRatingModal();
+        setModal(false); // Cerrar la ventana de "Ver respuesta" al enviar la calificación
+      }
     }
   };
 
@@ -199,45 +263,6 @@ const Preguntas = () => {
   const handleImageClick = (imageUrl) => {
     setImagePreview(imageUrl);
   };
-
-  // Ejemplos de preguntas respondidas
-  useEffect(() => {
-    setAnsweredQuestions([
-      {
-        id: 1,
-        title: "¿Cuál es la fórmula cuadrática?",
-        body: "Necesito saber la fórmula cuadrática para resolver una ecuación.",
-        price: 50,
-        topicId: 1,
-        deadline: "2025-02-10T12:14:40.420Z",
-        answer: "La fórmula cuadrática es: x = (-b ± √(b²-4ac)) / 2a",
-        expertName: "Juan Pérez",
-        rating: 0
-      },
-      {
-        id: 2,
-        title: "¿Qué es la energía cinética?",
-        body: "¿Podrías explicar qué es la energía cinética?",
-        price: 30,
-        topicId: 2,
-        deadline: "2025-02-11T15:00:00.000Z",
-        answer: "La energía cinética es la energía que posee un objeto debido a su movimiento.",
-        expertName: "María López",
-        rating: 0
-      },
-      {
-        id: 3,
-        title: "¿Qué es la fotosíntesis?",
-        body: "¿Podrías explicar el proceso de la fotosíntesis?",
-        price: 40,
-        topicId: 5,
-        deadline: "2025-02-12T10:00:00.000Z",
-        answer: "La fotosíntesis es el proceso por el cual las plantas convierten la luz solar en energía química.",
-        expertName: "Carlos García",
-        rating: 0
-      }
-    ]);
-  }, []);
 
   if (loading) {
     return <Loading />;
@@ -286,32 +311,38 @@ const Preguntas = () => {
           </div>
         </TabPane>
         <TabPane tabId="2">
-          <h2>Consultas respondidas</h2>
-          <p>Aquí podrás encontrar todas las preguntas que has realizado y que ya fueron respondidas por los expertos.</p>
-          <div className="question-list">
-            {answeredQuestions.map((question) => (
-              <div key={question.id} className="question-item">
-                <div className="question-details">
-                  <h5>{question.title}</h5>
-                  <p><strong>Precio:</strong> {question.price} Askoins</p>
-                  <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
-                  <p><strong>Respondido por:</strong> {question.expertName}</p>
-                  <p><strong>Estatus:</strong> {question.status}</p>
-                  {question.rating > 0 && (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <p><strong>Tu calificación:</strong></p>
-                      <div style={{ marginLeft: "10px" }}>{renderStars(question.rating)}</div>
+          {loadingAnsweredQuestions ? (
+            <Loading />
+          ) : (
+            <>
+              <h2>Consultas respondidas</h2>
+              <p>Aquí podrás encontrar todas las preguntas que has realizado y que ya fueron respondidas por los expertos.</p>
+              <div className="question-list">
+                {answeredQuestions.map((question) => (
+                  <div key={question.id} className="question-item">
+                    <div className="question-details">
+                      <h5>{question.title}</h5>
+                      <p><strong>Precio:</strong> {question.price} Askoins</p>
+                      <p><strong>Tema relacionado:</strong> {getTopicName(question.topicId)}</p>
+                      <p><strong>Respondido por:</strong> {question.expertName}</p>
+                      <p><strong>Estatus:</strong> {question.status}</p>
+                      {question.rating > 0 && (
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <p><strong>Tu calificación:</strong></p>
+                          <div style={{ marginLeft: "10px" }}>{renderStars(question.rating)}</div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="button-group">
-                  <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
-                    {question.status === 'rechazado' ? 'Ver justificación' : 'Ver respuesta'}
-                  </Button>
-                </div>
+                    <div className="button-group">
+                      <Button color="primary" className="view-more-button" onClick={() => toggleModal(question)}>
+                        {question.status === 'rechazado' ? 'Ver justificación' : 'Ver respuesta'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </TabPane>
       </TabContent>
 
