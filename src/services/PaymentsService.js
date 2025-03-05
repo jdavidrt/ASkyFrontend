@@ -11,18 +11,26 @@ class PaymentsService {
     }
     //payments/withdraw
     withdrawPayments() {
-        return axios.get(`${EXPERT_BASE_RES_API_URL}/withdraw`, {
+        return axios.post(`${EXPERT_BASE_RES_API_URL}/withdraw`, {
         });
     }
     //payments/recharge
     rechargePayments() {
-        return axios.get(`${EXPERT_BASE_RES_API_URL}/recharge`, {
+        return axios.post(`${EXPERT_BASE_RES_API_URL}/recharge`, {
         });
     }
     //payments/expert
-    expertPayout() {
-        return axios.get(`${EXPERT_BASE_RES_API_URL}/expert/payout`, {
-        });
+    expertPayout(expertId, rechargeData) {
+        const formData = new FormData();
+        for (const key in rechargeData) {
+            formData.append(key, rechargeData[key]);
+        }
+
+        return axios.post(`${EXPERT_BASE_RES_API_URL}/expert/payout/${expertId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
     }
 
 }

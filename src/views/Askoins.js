@@ -5,6 +5,10 @@ import userService from "../services/UserService";
 import "../Styles/Askoins.css"; // Usar estilos propios
 import { faWallet, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import paymentsService from "../services/PaymentsService";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { layer } from "@fortawesome/fontawesome-svg-core";
+import { Layout } from "lucide-react";
 const Askoins = () => {
   const { user, isAuthenticated } = useAuth0();
   const [askoinCount, setAskoinCount] = useState(0); // Inicializar el estado de ASKoins
@@ -16,15 +20,17 @@ const Askoins = () => {
   const [convertedAmount, setConvertedAmount] = useState(0); // Estado para el monto convertido
   const [totalToPay, setTotalToPay] = useState(0); // Estado para el total a pagar
   const [withdrawError, setWithdrawError] = useState(""); // Estado para el mensaje de error de retiro
-
+  const [userId, setUserId] = useState(0);
   const fetchUserConsultantStatus = useCallback(async () => {
     if (!user) return;
     try {
       const response = await userService.getAllUsers();
       const currentUser = response.data.data.find(u => u.auth0Id === user.sub);
+      console.log("current user", currentUser)
       if (currentUser) {
         setIsConsultant(currentUser.isConsultant);
         setAskoinCount(currentUser.amountAskoins || 0); // Actualizar el contador de ASKoins
+        setUserId(currentUser.id)
       }
     } catch (error) {
       console.error("Error fetching user consultant status:", error);
@@ -36,6 +42,41 @@ const Askoins = () => {
       fetchUserConsultantStatus();
     }
   }, [isAuthenticated, user, fetchUserConsultantStatus]);
+
+  const PayPalButtonComponent = () => {
+    const initialOptions = {
+      "client-id": "AZmNkf4cG7nXLjTioQh1sbBCtgA9SC44Jkhm1CfGHNf6kYIZpmNgFKv9NXvWqUdyFgzp3KX04obXoop_",
+      currency: "USD",
+      intent: "capture"
+    }
+    const createOrder = (data, actions) => {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "USD",
+              value: "1"
+            }
+          }
+        ]
+      })
+    }
+
+    const onAproove = (data, actions) => {
+      return actions.order.capture().then(function (details) {
+        alert("Transaction completed by" + details.payer.name.given_name)
+      })
+    }
+
+    return (
+      <PayPalScriptProvider options={initialOptions}>
+        <PayPalButtons style={{ layout: "horizontal", color: "blue", label: "paypal" }}
+          createOrder={(data, actions) => createOrder(data, actions)}
+          onApprove={(data, actions) => onAproove(data, actions)}>
+        </PayPalButtons>
+      </PayPalScriptProvider>
+    )
+  }
 
   const toggleRechargeModal = () => {
     setRechargeModal(!rechargeModal);
@@ -69,9 +110,18 @@ const Askoins = () => {
     setWithdrawError(""); // Limpiar el mensaje de error al cambiar la cantidad
   };
 
-  const handleRecharge = () => {
+  const handleRecharge = async () => {
     // Lógica para recargar ASKoins
     console.log(`Recargando ${rechargeAmount} ASKoins (${convertedAmount} pesos colombianos)`);
+    //console.log(currentUser)
+    const recharge = { "type": "Recharge", "moneyAmmount": { convertedAmount }, "askoinAmount": { rechargeAmount }, "method": "Paypal" }
+    try {
+      console.log("REch Data", recharge)
+      await paymentsService.expertPayout(userId, recharge); // Usar la función updateUser con el ID del usuario y los datos del usuario
+      console.log("Recarga ejecutandose")
+    } catch (error) {
+      console.error("Error al recargar el usuario:", error);
+    }
     setRechargeAmount("");
     setConvertedAmount(0);
     setTotalToPay(0);
@@ -197,6 +247,7 @@ const Askoins = () => {
           >
             Recargar
           </Button>
+          <PayPalButtonComponent />
           <Button color="secondary" onClick={toggleRechargeModal} style={{ fontSize: "1.1rem", padding: "10px 20px" }}>
             Cancelar
           </Button>
