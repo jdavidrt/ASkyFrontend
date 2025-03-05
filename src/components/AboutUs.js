@@ -38,17 +38,17 @@ const AboutUs = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h3 className="mission-title">Nuestra Misión</h3>
-              <p className="mission-text">
-              En ASky conectamos a personas con expertos en diversos campos del conocimiento para resolver dudas y preguntas de manera rápida y confiable. Nuestro objetivo es facilitar una plataforma accesible y eficiente que permite el intercambio de conocimiento, ayudando tanto a quienes buscan soluciones como a quienes desean generar ingresos compartiendo su experiencia.
-              </p>
+              <h3 className="vision-title">Nuestra Visión</h3>
+              <p className="vision-text">
+              Para el 2026, seremos la plataforma que facilite la conexión de expertos y usuarios que buscan respuestas especializadas en Colombia. Buscamos ser una referencia en soluciones rápidas y efectivas, creando un espacio confiable y accesible donde el conocimiento se valore y recompense.
+              </p>    
 
               {/* Espacio adicional entre misión y visión */}
               <div style={{ marginBottom: '20px' }}></div>
 
-              <h3 className="vision-title">Nuestra Visión</h3>
-              <p className="vision-text">
-              Para el 2026, seremos la plataforma que facilite la conexión de expertos y usuarios que buscan respuestas especializadas en Colombia. Buscamos ser una referencia en soluciones rápidas y efectivas, creando un espacio confiable y accesible donde el conocimiento se valore y recompense.
+              <h3 className="mission-title">Nuestra Misión</h3>
+              <p className="mission-text">
+              En ASky conectamos a personas con expertos en diversos campos del conocimiento para resolver dudas y preguntas de manera rápida y confiable. Nuestro objetivo es facilitar una plataforma accesible y eficiente que permite el intercambio de conocimiento, ayudando tanto a quienes buscan soluciones como a quienes desean generar ingresos compartiendo su experiencia.
               </p>
             </motion.div>
           </Col>
