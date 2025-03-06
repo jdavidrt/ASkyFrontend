@@ -31,9 +31,9 @@ const ContactUs = () => {
         setLoader(true);
 
         // Configuración de EmailJS
-        const serviceId = "service_k5zdn87";
-        const templateId = "template_utgw40e";
-        const publicKey = "q7U4-GS5XqTmcVjwD";
+        const serviceId = "service_adrm3mg";
+        const templateId = "template_gzd80me";
+        const publicKey = "2ocxOoiaHwXFlUxT7";
 
         const emailData = {
             service_id: serviceId,
