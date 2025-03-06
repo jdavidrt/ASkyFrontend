@@ -23,6 +23,7 @@
     "@babel/plugin-transform-react-jsx": "^7.23",
     "@cloudinary/react": "^1.14.1",
     "@cloudinary/url-gen": "^1.21.0",
+    "@emailjs/browser": "^4.3.3",
     "@fortawesome/fontawesome-svg-core": "^1.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^5.8",
