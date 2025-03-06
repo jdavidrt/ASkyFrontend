@@ -209,7 +209,7 @@ const ResponderPreguntas = () => {
   const handleSendAnswer = async () => {
     const answerBody = document.getElementById('expertAnswer').value;
     const answerData = {
-      type: "1",
+      type: 1,
       body: answerBody,
       questionId: selectedQuestion.id
     };
@@ -231,7 +231,7 @@ const ResponderPreguntas = () => {
   const handleSendRejection = async () => {
     const rejectionBody = document.getElementById('justification').value;
     const rejectionData = {
-      type: "2",
+      type: 2,
       body: rejectionBody,
       questionId: selectedQuestion.id
     };
