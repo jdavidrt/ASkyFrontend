@@ -115,7 +115,7 @@ const Askoins = () => {
     // Lógica para recargar ASKoins
     console.log(`Recargando ${rechargeAmount} ASKoins (${convertedAmount} pesos colombianos)`);
     console.log(userId)
-    const recharge = { "type": "Recharge", "moneyAmmount": convertedAmount, "askoinAmount": Number(rechargeAmount), "method": "Paypal" }
+    const recharge = { "type": "Recharge", "moneyAmmount": convertedAmount, "askoinAmount": Number(rechargeAmount), "method": "PayPal" }
     try {
       console.log("REch Data", recharge)
       await paymentsService.rechargePayments(userId, recharge); // Usar la función updateUser con el ID del usuario y los datos del usuario
