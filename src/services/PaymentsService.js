@@ -15,15 +15,16 @@ class PaymentsService {
         });
     }
     //payments/expert
-    expertPayout(expertId, rechargeData) {
-        const formData = new FormData();
-        for (const key in rechargeData) {
-            formData.append(key, rechargeData[key]);
-        }
+    expertPayout(expertId, withdrawData) {
+        /*const formData = new FormData();
+        for (const key in withdrawData) {
+            formData.append(key, withdrawData[key]);
+        }*/
 
-        return axios.post(`${EXPERT_BASE_RES_API_URL}/expert/payout?expertId=${expertId}`, formData, {
+        return axios.post(`${EXPERT_BASE_RES_API_URL}/expert/payout?expertId=${expertId}`, withdrawData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                accept: '*/*'
             }
         })
     }
@@ -36,7 +37,8 @@ class PaymentsService {
 
         return axios.post(`${EXPERT_BASE_RES_API_URL}/recharge?userId=${userId}`, rechargeData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                accept: '*/*'
             }
         })
     }

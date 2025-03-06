@@ -71,7 +71,7 @@ const Askoins = () => {
 
     return (
       <PayPalScriptProvider options={initialOptions}>
-        <PayPalButtons style={{ layout: "horizontal", color: "blue", label: "pay" }}
+        <PayPalButtons style={{ layout: "horizontal", color: "blue", label: "pay", height: 48 }}
           createOrder={(data, actions) => createOrder(data, actions)}
           onApprove={(data, actions) => onAproove(data, actions)}>
         </PayPalButtons>
@@ -115,7 +115,7 @@ const Askoins = () => {
     // Lógica para recargar ASKoins
     console.log(`Recargando ${rechargeAmount} ASKoins (${convertedAmount} pesos colombianos)`);
     console.log(userId)
-    const recharge = { "type": "Recharge", "moneyAmmount": convertedAmount, "askoinAmount": Number(rechargeAmount), "method": "PayPal" }
+    const recharge = { "type": "Recharge", "moneyAmount": (convertedAmount * 1.1), "askoinAmount": Number(rechargeAmount), "method": "PayPal" }
     try {
       console.log("REch Data", recharge)
       await paymentsService.rechargePayments(userId, recharge); // Usar la función updateUser con el ID del usuario y los datos del usuario
@@ -129,10 +129,18 @@ const Askoins = () => {
     toggleRechargeModal();
   };
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     if (withdrawAmount < 40) {
       setWithdrawError("No se puede retirar menos de 40 ASKoins.");
       return;
+    }
+    const payout = { "type": "Withdrawal", "moneyAmount": convertedAmount, "askoinAmount": Number(withdrawAmount), "method": "PayPal" }
+    try {
+      console.log("Payout data Data", payout)
+      await paymentsService.expertPayout(userId, payout); // Usar la función updateUser con el ID del usuario y los datos del usuario
+      console.log("Recarga ejecutandose")
+    } catch (error) {
+      console.error("Error al recargar el usuario:", error);
     }
     // Lógica para retirar ASKoins
     console.log(`Retirando ${withdrawAmount} ASKoins (${convertedAmount} pesos colombianos)`);
@@ -233,21 +241,7 @@ const Askoins = () => {
             </div>
           )}
         </ModalBody>
-        <ModalFooter>
-          <Button
-            color="primary"
-            style={{
-              backgroundColor: "#0891b2",
-              borderColor: "#0891b2",
-              fontSize: "1.1rem",
-              fontWeight: "bold",
-              padding: "10px 20px",
-              borderRadius: "5px",
-            }}
-            onClick={handleRecharge}
-          >
-            Recargar
-          </Button>
+        <ModalFooter style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <PayPalButtonComponent />
           <Button color="secondary" onClick={toggleRechargeModal} style={{ fontSize: "1.1rem", padding: "10px 20px" }}>
             Cancelar
