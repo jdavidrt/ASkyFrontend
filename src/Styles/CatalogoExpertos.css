@@ -180,3 +180,79 @@
     width: 100%;
   }
 }
+
+/* Dark Mode Styles */
+.dark-mode .catalogo-expertos-container {
+  background-color: #292d2f;
+  color: #d3d0cc;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .expert-card,
+.dark-mode .expert-card-horizontal {
+  background-color: #3c3e3f;
+  color: #d3d0cc;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .expert-card-content h3,
+.dark-mode .expert-card-content p {
+  color: #d3d0cc;
+}
+
+.dark-mode .search-button,
+.dark-mode .ask-button {
+  background-color: #0ea5e9;
+  color: #292d2f;
+}
+
+.dark-mode .search-button:hover,
+.dark-mode .ask-button:hover {
+  background-color: #0891b2;
+}
+
+.dark-mode .custom-modal-header {
+  background-color: #3c3e3f;
+  color: #d3d0cc;
+}
+
+.dark-mode .custom-modal-footer {
+  background-color: #454849;
+  color: #d3d0cc;
+}
+
+.dark-mode .custom-modal {
+  background-color: #3c3e3f;
+  color: #d3d0cc;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .custom-modal-header {
+  background-color: #292d2f;
+  color: #d3d0cc;
+}
+
+.dark-mode .custom-modal-footer {
+  background-color: #292d2f;
+  color: #d3d0cc;
+}
+
+.dark-mode .custom-modal-footer .btn-secondary {
+  background-color: #3c3e3f;
+  color: #d3d0cc;
+  border-color: #454849;
+}
+
+.dark-mode .custom-modal-footer .btn-secondary:hover {
+  background-color: #454849;
+  color: #d3d0cc;
+}
+
+.dark-mode .custom-modal-footer .btn-primary {
+  background-color: #0ea5e9;
+  color: #292d2f;
+}
+
+.dark-mode .custom-modal-footer .btn-primary:hover {
+  background-color: #0891b2;
+}

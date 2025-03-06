@@ -9,3 +9,35 @@
   object-fit: cover;
   aspect-ratio: 1 / 1; /* Asegurar que la imagen siempre sea un círculo */
 }
+
+.dark-mode .navbar {
+  background-color: #3c3e3f;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .nav-link-custom.router-link-exact-active {
+  border-bottom: 3px solid #0ea5e9 !important;
+}
+
+.dark-mode .nav-user-profile {
+  border: 2px solid #0ea5e9;
+}
+
+/* Estilos para perfil y cerrar sesión en pantallas pequeñas */
+@media (max-width: 768px) {
+  .dark-mode .dropdown-menu {
+    background-color: #3c3e3f;
+    box-shadow: #454849 0px 1px 2px 0px;
+  }
+
+  .dark-mode .dropdown-menu a,
+  .dark-mode .dropdown-menu button {
+    color: #d3d0cc;
+  }
+
+  .dark-mode .dropdown-menu a:hover,
+  .dark-mode .dropdown-menu button:hover {
+    background-color: #454849;
+    color: #ffffff;
+  }
+}

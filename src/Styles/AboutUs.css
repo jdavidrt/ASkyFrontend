@@ -130,4 +130,34 @@
       font-size: 0.95rem;
     }
   }
-  
+
+.dark-mode .about-us-section {
+  background-color: #292d2f;
+  color: #d3d0cc;
+}
+
+.dark-mode .section-title,
+.dark-mode .mission-title,
+.dark-mode .vision-title,
+.dark-mode .values-title,
+.dark-mode .value-proposition h2 {
+  color: #0ea5e9;
+}
+
+.dark-mode .about-us-text,
+.dark-mode .mission-text,
+.dark-mode .vision-text,
+.dark-mode .value-card p,
+.dark-mode .value-proposition p {
+  color: #d3d0cc;
+}
+
+.dark-mode .value-card {
+  background-color: #3c3e3f;
+  color: #d3d0cc;
+  box-shadow: #454849 0px 1px 2px 0px;
+}
+
+.dark-mode .value-card h4 {
+  color: #0ea5e9;
+}
