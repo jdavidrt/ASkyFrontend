@@ -55,7 +55,7 @@ const Askoins = () => {
           {
             amount: {
               currency_code: "USD",
-              value: "1"
+              value: rechargeAmount.toString()
             }
           }
         ]
@@ -64,13 +64,14 @@ const Askoins = () => {
 
     const onAproove = (data, actions) => {
       return actions.order.capture().then(function (details) {
+        paymentsService.rechargePayments()
         alert("Transaction completed by" + details.payer.name.given_name)
       })
     }
 
     return (
       <PayPalScriptProvider options={initialOptions}>
-        <PayPalButtons style={{ layout: "horizontal", color: "blue", label: "paypal" }}
+        <PayPalButtons style={{ layout: "horizontal", color: "blue", label: "pay" }}
           createOrder={(data, actions) => createOrder(data, actions)}
           onApprove={(data, actions) => onAproove(data, actions)}>
         </PayPalButtons>
@@ -113,11 +114,11 @@ const Askoins = () => {
   const handleRecharge = async () => {
     // Lógica para recargar ASKoins
     console.log(`Recargando ${rechargeAmount} ASKoins (${convertedAmount} pesos colombianos)`);
-    //console.log(currentUser)
-    const recharge = { "type": "Recharge", "moneyAmmount": { convertedAmount }, "askoinAmount": { rechargeAmount }, "method": "Paypal" }
+    console.log(userId)
+    const recharge = { "type": "Recharge", "moneyAmmount": convertedAmount, "askoinAmount": Number(rechargeAmount), "method": "Paypal" }
     try {
       console.log("REch Data", recharge)
-      await paymentsService.expertPayout(userId, recharge); // Usar la función updateUser con el ID del usuario y los datos del usuario
+      await paymentsService.rechargePayments(userId, recharge); // Usar la función updateUser con el ID del usuario y los datos del usuario
       console.log("Recarga ejecutandose")
     } catch (error) {
       console.error("Error al recargar el usuario:", error);
