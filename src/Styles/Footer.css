@@ -22,3 +22,12 @@
   .footer a:hover {
     text-decoration: underline;
   }
+
+.dark-mode .footer {
+  background-color: #292d2f;
+  color: #d3d0cc;
+}
+
+.dark-mode .footer a {
+  color: #0ea5e9;
+}

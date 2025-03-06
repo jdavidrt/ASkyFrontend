@@ -240,6 +240,59 @@ const NavBar = () => {
                 </>
               )}
             </Nav>
+            <Nav className="d-md-none" navbar>
+              <NavItem><DarkModeButton></DarkModeButton></NavItem>
+              {!isAuthenticated && (
+                <NavItem>
+                  <Button
+                    id="qsLoginBtn"
+                    color="Info"
+                    block
+                    onClick={() => loginWithRedirect()}
+                  >
+                    Iniciar Sesión
+                  </Button>
+                </NavItem>
+              )}
+              {isAuthenticated && user && (
+                <>
+                  <NavItem>
+                    <span className="user-info">
+                      <img
+                        src={profileImageUrl ? profileImageUrl : ExpertoProfile} // Usar la imagen de perfil del estado
+                        alt="Profile"
+                        className="nav-user-profile d-inline-block rounded-circle mr-3"
+                        width="50"
+                      />
+                      <h6 className="d-inline-block">{user.name}</h6>
+                    </span>
+                  </NavItem>
+                  <NavItem>
+                    <FontAwesomeIcon icon="user" className="mr-3" />
+                    <RouterNavLink
+                      to="/profile"
+                      activeClassName="router-link-exact-active"
+                      onClick={handleNavLinkClick} // Contraer el navbar al hacer clic
+                    >
+                      Perfil
+                    </RouterNavLink>
+                  </NavItem>
+                  <NavItem>
+                    <FontAwesomeIcon icon="power-off" className="mr-3" />
+                    <RouterNavLink
+                      to="#"
+                      id="qsLogoutBtn"
+                      onClick={() => {
+                        handleNavLinkClick(); // Contraer el navbar al hacer clic
+                        logoutWithRedirect();
+                      }}
+                    >
+                      Cerrar Sesión
+                    </RouterNavLink>
+                  </NavItem>
+                </>
+              )}
+            </Nav>
             <Nav className="d-none d-md-block" navbar>
               {!isAuthenticated && (
                 <NavItem>
@@ -286,25 +339,11 @@ const NavBar = () => {
                 </UncontrolledDropdown>
               )}
             </Nav>
-            {!isAuthenticated && (
-              <Nav className="d-md-none" navbar>
-                <NavItem>
-                  <Button
-                    id="qsLoginBtn"
-                    color="Info"
-                    block
-                    onClick={() => loginWithRedirect()}
-                  >
-                    Iniciar Sesión
-                  </Button>
-                </NavItem>
-              </Nav>
-            )}
             {isAuthenticated && user && (
               <Nav
                 className="d-md-none justify-content-between"
                 navbar
-                style={{ minHeight: 170 }}
+                style={{ minHeight: 170, display: "none" }} // Ocultar en ventanas pequeñas
               >
                 <NavItem>
                   <span className="user-info">
