@@ -339,20 +339,6 @@ const NavBar = () => {
                 </UncontrolledDropdown>
               )}
             </Nav>
-            {!isAuthenticated && (
-              <Nav className="d-md-none" navbar>
-                <NavItem>
-                  <Button
-                    id="qsLoginBtn"
-                    color="Info"
-                    block
-                    onClick={() => loginWithRedirect()}
-                  >
-                    Iniciar Sesión
-                  </Button>
-                </NavItem>
-              </Nav>
-            )}
             {isAuthenticated && user && (
               <Nav
                 className="d-md-none justify-content-between"
